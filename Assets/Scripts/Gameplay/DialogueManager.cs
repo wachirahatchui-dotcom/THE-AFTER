@@ -95,12 +95,21 @@ public class DialogueManager : MonoBehaviour
             view.HidePrompt();
     }
 
+    /// Raised the moment a conversation is opened, before its first line goes
+    /// up. A cutscene hooks this to take the controls and subscribe to onLine in
+    /// time for line zero.
+    public event System.Action<NPCInteractable> onBegan;
+
     public void Begin(NPCInteractable target, Transform player)
     {
         npc = target;
         index = 0;
         IsActive = true;
         view.HidePrompt();
+
+        // First, so anything that wants to be listening for line zero is
+        // subscribed before ShowLine runs at the bottom of this method.
+        if (onBegan != null) onBegan(target);
 
         // Read before MarkSeen: "have we met before?" is what picks the
         // entrance animation, and a first meeting gets the ceremonial one.
@@ -128,10 +137,15 @@ public class DialogueManager : MonoBehaviour
 
     void ShowLine()
     {
-        string line = (npc.lines != null && index < npc.lines.Length) ? npc.lines[index] : "...";
-        bool last = npc.lines == null || index >= npc.lines.Length - 1;
+        string line = npc.TextAt(index);
+        bool last = index >= npc.LineCount - 1;
 
-        bool speakerChanged = view.SetSpeaker(npc.npcName);
+        // Asked per line rather than once for the conversation. The box was
+        // always built to handle the speaker changing - it takes a
+        // speakerChanged flag and re-stamps the name plate on it - but every
+        // line used to be attributed to whoever the player pressed E on, so a
+        // scene with more than one person in it could not be written.
+        bool speakerChanged = view.SetSpeaker(npc.SpeakerAt(index));
 
         PlayVoice();
 
@@ -139,7 +153,19 @@ public class DialogueManager : MonoBehaviour
         // which fires immediately for a line that arrives complete (Instant
         // speed, subtitles off) and from the coroutine otherwise.
         view.ShowLine(line, index, speakerChanged, last);
+
+        // Announced after the line is up rather than before, so anything
+        // listening is cutting to a shot of a line that already exists.
+        if (onLine != null) onLine(index);
     }
+
+    /// Raised as each line goes up, carrying its index. A cutscene rides this to
+    /// cut the camera and fire whatever that line says should happen; a plain
+    /// conversation leaves it unsubscribed and nothing changes.
+    public event System.Action<int> onLine;
+
+    /// Raised when the box shuts, however it shut - finished, skipped, cut off.
+    public event System.Action onClosed;
 
     // The arrow starts breathing only once the player actually has a decision
     // to make, which is the moment the line stops appearing.
@@ -183,15 +209,23 @@ public class DialogueManager : MonoBehaviour
 
     void PlayVoice()
     {
-        if (voice == null || npc == null || npc.lineClips == null) return;
+        if (voice == null || npc == null) return;
 
-        if (index < npc.lineClips.Length && npc.lineClips[index] != null)
-        {
-            voice.Stop();
-            voice.clip = npc.lineClips[index];
-            voice.volume = GameSettings.VoiceVolume;   // its own slider
-            voice.Play();
-        }
+        // A line that continues the one before it is a piece of a speech that is
+        // already playing. Touching the source here would restart the speech at
+        // every piece, which is the opposite of what cutting it up was for.
+        if (npc.ContinuesVoiceAt(index)) return;
+
+        var clip = npc.ClipAt(index);
+
+        // An unvoiced line still ends the previous one. Letting the last clip run
+        // on under a line nobody speaks reads as the wrong character talking.
+        if (clip == null) { voice.Stop(); return; }
+
+        voice.Stop();
+        voice.clip = clip;
+        voice.volume = GameSettings.VoiceVolume;   // its own slider
+        voice.Play();
     }
 
     public void Advance()
@@ -209,7 +243,7 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        if (npc != null && npc.lines != null && index < npc.lines.Length - 1)
+        if (npc != null && index < npc.LineCount - 1)
         {
             index++;
             ShowLine();
@@ -222,7 +256,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (!IsActive) return;
 
-        bool midway = npc != null && npc.lines != null && index < npc.lines.Length - 1;
+        bool midway = npc != null && index < npc.LineCount - 1;
         Close(midway ? DialogueAnimations.Exit.Skipped : DialogueAnimations.Exit.Finished);
     }
 
@@ -250,6 +284,10 @@ public class DialogueManager : MonoBehaviour
         npc = null;
 
         view.Close(reason);
+
+        // Last, so a listener handing control back is doing it to a box that has
+        // already been told to shut rather than one still mid-line.
+        if (onClosed != null) onClosed();
     }
 
     void OnDestroy()

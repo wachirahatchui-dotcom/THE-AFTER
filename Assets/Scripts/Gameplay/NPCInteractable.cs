@@ -4,14 +4,93 @@ using UnityEngine;
 // their "Talking" animator bool while a dialogue is open.
 public class NPCInteractable : MonoBehaviour
 {
+    // One line of a conversation, with its own speaker and its own clip.
+    //
+    // The older `lines` array below is a list of strings all spoken by this NPC,
+    // with the audio found by matching a file in Resources/Voice against the
+    // line's own text. That is enough for two lines of "come find me" and gives
+    // out on a real scene: a conversation has more than one person in it, and a
+    // filename cannot hold a speech long enough to be worth writing - Windows
+    // stops at 260 characters and one of Baena's is longer than that on its own.
+    [System.Serializable]
+    public class Line
+    {
+        [Tooltip("Who says it. Left empty, the NPC's own name is used.")]
+        public string speaker;
+
+        [TextArea(2, 5)]
+        public string text;
+
+        [Tooltip("Spoken audio for this line. Left empty, the line is read in silence.")]
+        public AudioClip voice;
+
+        [Tooltip("Tick for a line that carries on the clip the line before it started - a long speech cut into readable pieces. The audio plays on underneath them instead of restarting at each one.")]
+        public bool continuesVoice;
+
+        [Tooltip("Which camera holds this line, by name. Left empty the shot does not change, which is how a reaction is written: give the reaction its own camera and leave the line after it blank to stay there.")]
+        public string shot;
+
+        [Tooltip("Something that happens as this line starts - somebody steps forward, somebody is shoved back. Read by the cutscene runner and ignored by a plain conversation.")]
+        public string cue;
+    }
+
     public string npcName = "Logan";
 
+    [Tooltip("The conversation. Anything in here is used instead of the plain lines below, and every entry carries its own speaker and its own clip.")]
+    public Line[] script;
+
     [TextArea(2, 4)]
+    [Tooltip("The simple form: every line spoken by this NPC, audio matched by filename in Resources/Voice. Ignored when `script` has anything in it.")]
     public string[] lines =
     {
         "Hey Asher. You're finally awake.",
         "Eat something, then come find me. We have work to do."
     };
+
+    /// Whether this NPC is using the multi-speaker form.
+    public bool HasScript { get { return script != null && script.Length > 0; } }
+
+    public int LineCount
+    {
+        get { return HasScript ? script.Length : (lines == null ? 0 : lines.Length); }
+    }
+
+    public string TextAt(int i)
+    {
+        if (HasScript) return i >= 0 && i < script.Length ? script[i].text : "...";
+        return lines != null && i >= 0 && i < lines.Length ? lines[i] : "...";
+    }
+
+    public string SpeakerAt(int i)
+    {
+        if (!HasScript || i < 0 || i >= script.Length) return npcName;
+        var who = script[i].speaker;
+        return string.IsNullOrEmpty(who) ? npcName : who;
+    }
+
+    public AudioClip ClipAt(int i)
+    {
+        if (HasScript) return i >= 0 && i < script.Length ? script[i].voice : null;
+        return lineClips != null && i >= 0 && i < lineClips.Length ? lineClips[i] : null;
+    }
+
+    /// True when this line shares the clip the line before it started.
+    public bool ContinuesVoiceAt(int i)
+    {
+        return HasScript && i > 0 && i < script.Length && script[i].continuesVoice;
+    }
+
+    /// The camera this line is held on, or empty to stay on the one before it.
+    public string ShotAt(int i)
+    {
+        return HasScript && i >= 0 && i < script.Length ? script[i].shot : null;
+    }
+
+    /// What happens as this line starts, or empty for nothing.
+    public string CueAt(int i)
+    {
+        return HasScript && i >= 0 && i < script.Length ? script[i].cue : null;
+    }
 
     public float interactRange = 3f;
 
@@ -151,6 +230,10 @@ public class NPCInteractable : MonoBehaviour
 
     void LoadVoiceClips()
     {
+        // A script carries its own clips, chosen in the Inspector. Nothing to
+        // look up, and nothing that depends on a filename matching a sentence.
+        if (HasScript) return;
+
         if (lines == null) return;
         lineClips = new AudioClip[lines.Length];
 
