@@ -47,8 +47,8 @@ MonoBehaviour:
   questObjectiveFontSize: 26
   questPanelFill: {r: 0.055, g: 0.063, b: 0.075, a: 0.8}
   questBoxSize: 20
-  questMarkerScreenHeight: 0.26
-  questMarkerHideWithin: 4.5
+  questMarkerScreenHeight: 0.3
+  questMarkerHideWithin: 3
   titleLogoHeight: 360
   titleLogoOffset: {x: -33.666313, y: 0}
   titleLogoReveal: 1

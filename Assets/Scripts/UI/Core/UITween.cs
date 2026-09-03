@@ -77,10 +77,20 @@ public static class UITween
                                Action<float> onUpdate, Action onComplete = null,
                                float delay = 0f, bool unscaled = true)
     {
-        return UITweenRunner.I.Run(owner, Drive(duration, ease, onUpdate, onComplete, delay, unscaled));
+        return UITweenRunner.I.Run(owner, Drive(owner, duration, ease, onUpdate, onComplete, delay, unscaled));
     }
 
-    static IEnumerator Drive(float duration, Ease ease, Action<float> onUpdate,
+    // The owner is carried through so the tween can stop when whatever it
+    // belongs to goes away.
+    //
+    // Killing on OnDestroy is not enough on its own: a delayed tween is a
+    // callback waiting on a timer, and the objects it touches are captured
+    // inside it rather than known to the runner. Leaving the main menu
+    // mid-intro therefore fired a scale onto a logo that had been destroyed
+    // with the scene. A destroyed owner means nothing downstream is worth
+    // running.
+    static IEnumerator Drive(UnityEngine.Object owner,
+                             float duration, Ease ease, Action<float> onUpdate,
                              Action onComplete, float delay, bool unscaled)
     {
         if (delay > 0f)
@@ -89,9 +99,12 @@ public static class UITween
             while (d < delay)
             {
                 d += unscaled ? Time.unscaledDeltaTime : Time.deltaTime;
+                if (Gone(owner)) yield break;
                 yield return null;
             }
         }
+
+        if (Gone(owner)) yield break;
 
         if (duration <= 0f)
         {
@@ -106,8 +119,10 @@ public static class UITween
         {
             t += unscaled ? Time.unscaledDeltaTime : Time.deltaTime;
             onUpdate?.Invoke(Evaluate(ease, t / duration));
+            if (Gone(owner)) yield break;
             yield return null;
         }
+        if (Gone(owner)) yield break;
         onUpdate?.Invoke(1f);
         onComplete?.Invoke();
     }
@@ -115,6 +130,14 @@ public static class UITween
     // Deliberately goes through Existing, not I: Kill is called from OnDestroy,
     // which also runs during scene teardown, and creating the runner there
     // would leave a stray GameObject behind in the closing scene.
+    // A Unity object that has been destroyed compares equal to null through
+    // the engine's own operator, which is what makes this the right test
+    // rather than a plain reference check.
+    static bool Gone(UnityEngine.Object owner)
+    {
+        return owner == null;
+    }
+
     public static void Kill(UnityEngine.Object owner)
     {
         var runner = UITweenRunner.Existing;
