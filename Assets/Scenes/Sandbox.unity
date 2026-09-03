@@ -248,80 +248,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!1 &61204158
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 61204160}
-  - component: {fileID: 61204161}
-  - component: {fileID: 61204159}
-  m_Layer: 0
-  m_Name: Teleport Gate to Stage 3 (Trigger)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &61204159
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 61204158}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 425701eee43a52d4cb1dfc03ccff6462, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TeleportGate
-  destination: {fileID: 1093787888}
-  arrivalPoint: {fileID: 2041618719}
-  visible: 1
-  fadeSeconds: 0.35
-  reentryGuard: 1
-  objectiveOnArrival: 
-  completesObjective: 0
---- !u!4 &61204160
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 61204158}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 43.588127, y: 8.636081, z: 0.56841105}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2041618719}
-  m_Father: {fileID: 1275862419}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &61204161
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 61204158}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 6.6666665, y: 17.067245, z: 34.39131}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &65541911
 GameObject:
   m_ObjectHideFlags: 0
@@ -1342,6 +1268,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1106573412095511103, guid: 68a465de7bd11344ebc7ba24b8d715fe, type: 3}
   m_PrefabInstance: {fileID: 479097188}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &223627780 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5710750251639980103, guid: 23013e7298a59f04da5b6e086dd9bd63, type: 3}
+  m_PrefabInstance: {fileID: 1921703683}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &223627781 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2475288651576784565, guid: 23013e7298a59f04da5b6e086dd9bd63, type: 3}
+  m_PrefabInstance: {fileID: 1921703683}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &223627785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223627780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 425701eee43a52d4cb1dfc03ccff6462, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TeleportGate
+  destination: {fileID: 1093787888}
+  arrivalPoint: {fileID: 2041618719}
+  range: 2.8
+  rangeFrom: {fileID: 429453314}
+  visible: 1
+  fadeSeconds: 0.35
+  reentryGuard: 1.2
+  objectiveOnArrival: 
+  completesObjective: 0
 --- !u!1 &230467878
 GameObject:
   m_ObjectHideFlags: 0
@@ -2575,6 +2532,37 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &429453313
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 429453314}
+  m_Layer: 0
+  m_Name: Range Centre
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &429453314
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 429453313}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.000000015454312, y: 0.7071068, z: -0.000000015454312, w: 0.7071068}
+  m_LocalPosition: {x: 0.0000088562065, y: -0.000000828651, z: -0.0000038146986}
+  m_LocalScale: {x: 5.555554, y: 4.827241, z: 4.8272395}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 223627781}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &430167869
 GameObject:
   m_ObjectHideFlags: 0
@@ -8903,8 +8891,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 425701eee43a52d4cb1dfc03ccff6462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TeleportGate
-  destination: {fileID: 61204159}
+  destination: {fileID: 223627785}
   arrivalPoint: {fileID: 430167870}
+  range: 2.6
+  rangeFrom: {fileID: 0}
   visible: 0
   fadeSeconds: 0.35
   reentryGuard: 1
@@ -9580,11 +9570,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1921703692}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1275862419 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 23013e7298a59f04da5b6e086dd9bd63, type: 3}
-  m_PrefabInstance: {fileID: 1921703683}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1281864978
 GameObject:
   m_ObjectHideFlags: 0
@@ -12191,11 +12176,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5896058370802397653, guid: 23013e7298a59f04da5b6e086dd9bd63, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5896058370802397653, guid: 23013e7298a59f04da5b6e086dd9bd63, type: 3}
       propertyPath: m_IsTrigger
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7291872243013070160, guid: 23013e7298a59f04da5b6e086dd9bd63, type: 3}
       propertyPath: m_Name
@@ -12209,9 +12194,6 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 6071030410335871357, guid: 23013e7298a59f04da5b6e086dd9bd63, type: 3}
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 23013e7298a59f04da5b6e086dd9bd63, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 61204160}
     - targetCorrespondingSourceObject: {fileID: 268930103831438935, guid: 23013e7298a59f04da5b6e086dd9bd63, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1475885595}
@@ -12254,7 +12236,16 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -3705419822107206817, guid: 23013e7298a59f04da5b6e086dd9bd63, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2047502795}
-    m_AddedComponents: []
+    - targetCorrespondingSourceObject: {fileID: 2475288651576784565, guid: 23013e7298a59f04da5b6e086dd9bd63, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2041618719}
+    - targetCorrespondingSourceObject: {fileID: 2475288651576784565, guid: 23013e7298a59f04da5b6e086dd9bd63, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 429453314}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5710750251639980103, guid: 23013e7298a59f04da5b6e086dd9bd63, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 223627785}
   m_SourcePrefab: {fileID: 100100000, guid: 23013e7298a59f04da5b6e086dd9bd63, type: 3}
 --- !u!4 &1921703684 stripped
 Transform:
@@ -12574,12 +12565,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2041618718}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: -0.7071068}
-  m_LocalPosition: {x: -6.6436768, y: -7.5249705, z: 0}
-  m_LocalScale: {x: 6.393753, y: 5.5555553, z: 4.8272395}
+  m_LocalRotation: {x: 0.000000021855696, y: -0, z: -0, w: -1}
+  m_LocalPosition: {x: -0.011167886, y: -6.5384727, z: 9.091078}
+  m_LocalScale: {x: 5.555554, y: 4.827241, z: 4.8272395}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 61204160}
+  m_Father: {fileID: 223627781}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2047229101
 GameObject:

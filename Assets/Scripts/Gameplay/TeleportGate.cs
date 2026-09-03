@@ -3,25 +3,42 @@ using UnityEngine;
 
 // A doorway that moves the player to its opposite number.
 //
-// Two of these make a pair: walk into one and you arrive standing in front of
+// Two of these make a pair: walk up to one and you arrive standing in front of
 // the other, facing into the room rather than back at the door you came out of.
 //
-// The arrival spot is a child marker rather than a position typed in here. A
-// gate is a slab with width to it, so "in front of" is a place in the level that
-// has to be looked at in the Scene view and nudged until a person standing there
-// is clear of the frame and the wall - not a number that can be worked out.
-[RequireComponent(typeof(Collider))]
+// It watches the distance to the player rather than waiting on a trigger.
+//
+// The trigger version did not survive contact with the level. The black door in
+// the bunker sits on a wall with seven centimetres between the two, so the
+// player is stopped by the wall while barely grazing the trigger volume - close
+// enough to look like they walked into the door, not close enough for
+// OnTriggerEnter to fire. Measuring a distance has none of that: no volume to
+// clip through, nothing for a wall to get in front of, and it reads the same
+// way the campfire does a few metres away, which is a thing the player has
+// already learned by the time they get here.
+//
+// The arrival spot is a marker in the scene rather than a position typed in
+// here. "In front of" is a place that has to be looked at in the Scene view and
+// nudged until a person standing there is clear of the frame - not a number that
+// can be worked out.
 public class TeleportGate : MonoBehaviour
 {
     [Header("The pair")]
-    [Tooltip("The gate on the other side. Walking into this one puts the player at that one's arrival marker.")]
+    [Tooltip("The gate on the other side. Coming to this one puts the player at that one's arrival marker.")]
     public TeleportGate destination;
 
-    [Tooltip("Where somebody arriving AT this gate is put down. Should stand clear of the slab and face away from it.")]
+    [Tooltip("Where somebody arriving AT this gate is put down. Should stand clear of the doorway and face away from it.")]
     public Transform arrivalPoint;
 
+    [Header("Range")]
+    [Tooltip("How close the player has to get, measured along the ground. Generous on purpose: a doorway you have to hit exactly is a doorway that feels broken.")]
+    public float range = 2.6f;
+
+    [Tooltip("Measured to this instead of the gate's own origin, for a gate whose pivot is off in a corner. Left empty the gate itself is used.")]
+    public Transform rangeFrom;
+
     [Header("Look")]
-    [Tooltip("Off for a gate that is only a trigger - no mesh, nothing to bump into, just a line to cross.")]
+    [Tooltip("Off for a gate that is felt and not seen - no mesh, just a place that moves you.")]
     public bool visible = true;
 
     [Header("Feel")]
@@ -29,7 +46,7 @@ public class TeleportGate : MonoBehaviour
     public float fadeSeconds = 0.35f;
 
     [Tooltip("How long this gate ignores the player after they arrive, so stepping out of one does not immediately fall back into it.")]
-    public float reentryGuard = 1.0f;
+    public float reentryGuard = 1.2f;
 
     [Header("Quest")]
     [Tooltip("Objective put up when the player arrives through THIS gate. Left empty the tracker is untouched, which is what a gate the player is only passing back through wants.")]
@@ -46,39 +63,58 @@ public class TeleportGate : MonoBehaviour
     // not re-announce an errand the player is already on.
     bool announced;
 
-    static bool moving;   // one teleport at a time, whatever is touching what
+    // Whether the player has stood clear of this gate since it last put them
+    // down nearby.
+    //
+    // A timer is not enough on its own. Both arrival marks sit a couple of
+    // metres from their own gate - which is what "in front of the door" means -
+    // and that is inside the range that opens it. On a timer alone the player
+    // arrives, waits a second and a half, and is sent straight back, for ever.
+    // The campfire has the same shape of problem and solves it the same way: the
+    // door will not open again until they have actually walked away from it.
+    bool mustLeaveFirst;
 
-    void Reset()
-    {
-        var c = GetComponent<Collider>();
-        if (c != null) c.isTrigger = true;
-    }
+    static bool moving;   // one teleport at a time, whatever is near what
+
+    Transform player;
+
+    Vector3 Centre { get { return rangeFrom != null ? rangeFrom.position : transform.position; } }
 
     void Awake()
     {
-        var col = GetComponent<Collider>();
-        if (col != null) col.isTrigger = true;
-
-        // A gate that is meant to be felt and not seen keeps its collider - that
-        // is the whole of it - and loses only the drawing.
+        // A gate meant to be felt and not seen keeps whatever collider it has -
+        // it is not used for the teleport either way - and loses only the drawing.
         if (!visible)
             foreach (var r in GetComponentsInChildren<Renderer>(true))
                 r.enabled = false;
     }
 
-    void OnTriggerEnter(Collider other)
+    void Update()
     {
         if (moving || Time.time < ignoreUntil) return;
         if (destination == null || destination.arrivalPoint == null) return;
 
-        // Only the player. Anything else that wanders in is left alone.
-        var player = other.GetComponentInParent<PlayerMovement>();
-        if (player == null) return;
+        if (player == null)
+        {
+            var pm = Object.FindAnyObjectByType<PlayerMovement>();
+            if (pm != null) player = pm.transform;
+            if (player == null) return;
+        }
+
+        // On the ground plane: standing on a step or crouching in a doorway
+        // should not change whether you are close enough to go through it.
+        float d = Vector3.ProjectOnPlane(player.position - Centre, Vector3.up).magnitude;
+
+        // A margin past the edge, so somebody standing exactly on the boundary
+        // cannot flicker in and out of range and re-open the door by shuffling.
+        if (d > range + 0.8f) mustLeaveFirst = false;
+
+        if (mustLeaveFirst || d > range) return;
 
         StartCoroutine(Move(player.gameObject, destination.arrivalPoint));
     }
 
-    IEnumerator Move(GameObject player, Transform to)
+    IEnumerator Move(GameObject who, Transform to)
     {
         moving = true;
 
@@ -91,27 +127,31 @@ public class TeleportGate : MonoBehaviour
 
         // The controller writes its own position every frame and will drag him
         // straight back if it is left switched on across the move.
-        var cc = player.GetComponent<CharacterController>();
+        var cc = who.GetComponent<CharacterController>();
         bool had = cc != null && cc.enabled;
         if (cc != null) cc.enabled = false;
 
-        player.transform.SetPositionAndRotation(to.position, to.rotation);
+        who.transform.SetPositionAndRotation(to.position, to.rotation);
 
         // The first-person camera keeps its own yaw, so putting the body down
         // facing the room is not enough - the head has to be told as well, or the
-        // player arrives looking at a wall.
-        var look = player.GetComponentInChildren<FirstPersonCamera>();
-        if (look == null) look = Object.FindAnyObjectByType<FirstPersonCamera>();
+        // player arrives looking at the wall they just came through.
+        var look = Object.FindAnyObjectByType<FirstPersonCamera>();
         if (look != null) look.SetYaw(to.eulerAngles.y);
 
         if (cc != null) cc.enabled = had;
 
-        // The gate being arrived at must not fire on the way out of it.
-        if (destination != null) destination.ignoreUntil = Time.time + destination.reentryGuard;
+        // Both ends stand down: the gate arrived at holds until the player has
+        // walked away from it, and this one holds for a moment in case they turn
+        // straight round.
+        if (destination != null)
+        {
+            destination.ignoreUntil = Time.time + destination.reentryGuard;
+            destination.mustLeaveFirst = true;
+        }
         ignoreUntil = Time.time + reentryGuard;
+        mustLeaveFirst = true;
 
-        // The objective belongs to the gate arrived at, not the one left, so it
-        // is the destination that gets to speak.
         if (destination != null) destination.Announce();
 
         yield return null;
@@ -134,7 +174,7 @@ public class TeleportGate : MonoBehaviour
         if (completesObjective) quest.Complete(0.9f);
 
         // After the tick, so the player sees the old task close before the new
-        // one arrives rather than the panel simply swapping text under them.
+        // one arrives rather than the panel swapping text under them.
         StartCoroutine(ShowAfter(completesObjective ? 1.1f : 0f));
     }
 
@@ -147,16 +187,22 @@ public class TeleportGate : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
+        // The range is the whole of how this works, so it is the thing worth
+        // seeing in the Scene view.
         Gizmos.color = new Color(0.3f, 0.8f, 1f, 0.9f);
+        Gizmos.DrawWireSphere(Centre, range);
+
         if (arrivalPoint != null)
         {
+            Gizmos.color = new Color(0.4f, 1f, 0.5f, 0.9f);
             Gizmos.DrawWireSphere(arrivalPoint.position, 0.4f);
             Gizmos.DrawRay(arrivalPoint.position, arrivalPoint.forward * 1.5f);
         }
+
         if (destination != null)
         {
             Gizmos.color = new Color(1f, 0.6f, 0.2f, 0.8f);
-            Gizmos.DrawLine(transform.position, destination.transform.position);
+            Gizmos.DrawLine(Centre, destination.Centre);
         }
     }
 }
