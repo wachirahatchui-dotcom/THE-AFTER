@@ -41,7 +41,8 @@ MonoBehaviour:
   titleFontSize: 96
   subtitleFontSize: 30
   titleRuleWidth: 620
-  captionFontSize: 44
+  captionFontSize: 39
+  tutorialFontSize: 38
   titleLogoHeight: 360
   titleLogoOffset: {x: -33.666313, y: 0}
   titleLogoReveal: 1

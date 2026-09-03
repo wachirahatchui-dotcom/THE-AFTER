@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuUI
   themeAsset: {fileID: 0}
-  gameSceneName: Sandbox
+  gameSceneName: Chapter1
   titleText: THE AFTER
   subtitleText: A world after the collapse
   showSplash: 1

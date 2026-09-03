@@ -16,11 +16,30 @@ using UnityEngine;
 // That is exactly what a black screen halfway through Stage 3 turned out to be.
 public class CutsceneChapter1 : MonoBehaviour
 {
+    // The scenery and cast belonging to one stage of the chapter.
+    //
+    // Kept as a named list rather than two hard-coded fields so a stage added
+    // later needs an entry in the Inspector and a ShowOnly() call, not a new
+    // pair of fields and another block of the same code.
+    [System.Serializable]
+    public class StageSet
+    {
+        [Tooltip("What this set is. For reading in the Inspector - unused at runtime.")]
+        public string label;
+
+        [Tooltip("Everything that exists only for this stage: its set, its cast, its props. Not the player, and not anything a later stage still needs.")]
+        public GameObject[] objects;
+    }
+
     [Header("Stages")]
     public CutsceneStage1 stage1;
 
     public CutsceneStage3 stageWake;
     public CutsceneStage3 stageTalk;
+
+    [Header("Stage sets")]
+    [Tooltip("One entry per stage, in playing order. Exactly one is live at a time - the rest are switched off.")]
+    public StageSet[] stageSets;
 
     [Header("Player")]
     public GameObject player;
@@ -70,6 +89,17 @@ public class CutsceneChapter1 : MonoBehaviour
         SetPlayerControl(false);
         if (campfire != null) campfire.armed = false;
 
+        // Only the stage being played is switched on.
+        //
+        // The whole chapter lives in one scene, with the bedroom and the camp
+        // standing eighty-odd metres apart. Unity does not draw what the camera
+        // cannot see, so it is tempting to leave both of them on - but a switched
+        // on object is not free just because it is out of frame. It still casts
+        // shadows into shots it does not appear in, its skinned meshes are still
+        // accounted for, and every one of its meshes still sits in memory. The
+        // bedroom alone is two million triangles and the camp is another four.
+        ShowOnly(0);
+
         if (stage1 != null)
         {
             stage1.onFinished += OnStage1Finished;
@@ -78,9 +108,32 @@ public class CutsceneChapter1 : MonoBehaviour
         else OnStage1Finished();
     }
 
+    /// Switches on the set at this index and switches every other one off.
+    /// Out-of-range hides them all, which is what an unbuilt stage should do.
+    void ShowOnly(int index)
+    {
+        if (stageSets == null) return;
+
+        for (int i = 0; i < stageSets.Length; i++)
+        {
+            var set = stageSets[i];
+            if (set == null || set.objects == null) continue;
+
+            bool on = i == index;
+            foreach (var go in set.objects)
+                if (go != null) go.SetActive(on);
+        }
+    }
+
     void OnStage1Finished()
     {
         if (stage1 != null) stage1.onFinished -= OnStage1Finished;
+
+        // The swap happens here, behind the black Stage 1 always ends on, and
+        // before the waking scene evaluates its first frame. Order matters:
+        // Timeline cannot animate an object that is switched off, so the camp
+        // has to be live before stageWake touches it.
+        ShowOnly(1);
 
         Debug.Log("[Chapter1] Stage 1 จบ (รวมภาพวาดในตัว) - ต่อ Stage 3a");
         PlayWake();

@@ -38,6 +38,30 @@ git push --force
 ใช้ตัวสุดท้ายนี้เฉพาะตอนแน่ใจจริง ๆ ว่าไม่ต้องการของหลังจากนั้นอีกเลย -
 ตัวก่อนหน้า (`revert`) ปลอดภัยกว่าเพราะไม่ลบประวัติอะไรทิ้ง
 
+## เวอร์ชั่น Backup หลัก (tag)
+
+จุดเช็คพอยต์ใหญ่ที่ตั้งใจกันไว้ไม่ให้หาย ไม่ขยับตาม autosync รอบถัดๆ ไป
+ดูทั้งหมดได้ที่ https://github.com/wachirahatchui-dotcom/THE-AFTER/releases
+
+- `v0.1-main` - "THE AFTER V.01 MAIN"
+
+**กู้กลับมาทั้งโปรเจกต์จาก tag (ทดสอบแล้วว่าใช้ได้จริง 100%):**
+
+```bash
+git clone --branch v0.1-main https://github.com/wachirahatchui-dotcom/THE-AFTER.git
+```
+
+**อย่าใช้ปุ่ม "Download ZIP" บนหน้าเว็บ Release/tag แทนคำสั่งข้างบน** - GitHub
+ไม่แพ็กไฟล์ Git LFS (รูป/เสียง/โมเดล) ลงในซิปให้อัตโนมัติ ได้แต่ไฟล์ pointer
+เล็ก ๆ แทนไฟล์จริง ต้อง `git clone` เท่านั้นถึงจะได้ไฟล์ใหญ่มาด้วยครบ
+
+จะตั้ง tag ใหม่ตอนมีเวอร์ชั่นหลักถัดไป (เช่น V.02):
+
+```bash
+git tag -a "v0.2-main" -m "THE AFTER V.02 MAIN"
+git push origin "v0.2-main"
+```
+
 ## ปิด/เปิด autosync ชั่วคราว
 
 ```powershell
