@@ -69,6 +69,9 @@ public class CutsceneChapter1 : MonoBehaviour
     [Tooltip("The objective in the corner. Stays until he reaches the fire.")]
     public string walkObjective = "Go to the campfire and talk with Logan";
 
+    [Tooltip("Put up the moment Logan is done - the errand he sends Asher on.")]
+    public string garageObjective = "Go through the black door to the garage";
+
     [Header("Waiting for the player")]
     [Tooltip("Logan, so he can breathe and look about while the player walks over instead of sitting frozen on the last frame of the scene that just ended.")]
     public SeatedIdle waitingIdle;
@@ -276,7 +279,11 @@ public class CutsceneChapter1 : MonoBehaviour
 
         Debug.Log("[Chapter1] Stage 3b จบ - ส่งคืนให้ผู้เล่น");
         SetPlayerControl(true);
-        if (quest != null) quest.Clear();
+
+        // Straight from finishing with Logan into the next errand. Clearing the
+        // tracker and putting a new objective up a second later would read as
+        // the game losing its place.
+        if (quest != null) quest.Show(garageObjective);
     }
 
     void SetPlayerControl(bool on)

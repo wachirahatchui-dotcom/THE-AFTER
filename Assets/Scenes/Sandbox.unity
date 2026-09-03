@@ -156,6 +156,8 @@ MonoBehaviour:
   visible: 1
   fadeSeconds: 0.35
   reentryGuard: 1
+  objectiveOnArrival: 
+  completesObjective: 0
 --- !u!4 &25922384
 Transform:
   m_ObjectHideFlags: 0
@@ -6371,7 +6373,7 @@ MonoBehaviour:
     voice: {fileID: 0}
     continuesVoice: 0
     shot: S_Baena
-    cue: baena-leaves
+    cue: baena-scoffs
   - speaker: Ethan
     text: Don't let him get under your skin, Asher. You ready to roll?
     voice: {fileID: 8300000, guid: 4efa5e027b773784ab359e19a56d0a55, type: 3}
@@ -8996,6 +8998,8 @@ MonoBehaviour:
   visible: 0
   fadeSeconds: 0.35
   reentryGuard: 1
+  objectiveOnArrival: Find Ethan and talk to him
+  completesObjective: 1
 --- !u!1 &1099673660
 GameObject:
   m_ObjectHideFlags: 0
@@ -11497,6 +11501,7 @@ MonoBehaviour:
   campfire: {fileID: 1228713553}
   walkPrompt: W A S D  to move        SHIFT  to run        SPACE  to jump
   walkObjective: Join Logan at the campfire
+  garageObjective: Go through the black door to the garage
   waitingIdle: {fileID: 0}
   markerTarget: {fileID: 0}
   markerHeight: 2
@@ -11797,6 +11802,8 @@ MonoBehaviour:
   walkSeconds: 2.2
   stepSeconds: 0.7
   closingFade: 1.6
+  walkClip: {fileID: 7400000, guid: 32be9f7b65b5c4b4cbd4683af4fbc38f, type: 2}
+  walkClipSpeed: 1.35
 --- !u!4 &1782680564
 Transform:
   m_ObjectHideFlags: 0

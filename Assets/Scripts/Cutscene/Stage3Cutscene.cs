@@ -56,6 +56,18 @@ public class Stage3Cutscene : MonoBehaviour
     public float stepSeconds = 0.7f;
     public float closingFade = 1.6f;
 
+    [Header("Walk")]
+    // Asher's walk drives every one of them. The five rigs came out of the same
+    // converter with the same forty-one bones under the same paths, so a clip
+    // authored against one binds to all of them - checked binding by binding
+    // rather than assumed. Without this a character crossing the floor slides
+    // with their legs still.
+    [Tooltip("Played on whoever is crossing the floor. Any clip built for these rigs works on all of them.")]
+    public AnimationClip walkClip;
+
+    [Tooltip("Steps per second the clip was authored at, used to keep the feet from skating.")]
+    public float walkClipSpeed = 1.35f;
+
     // Idles are switched off while a character is being moved or posed, and back
     // on afterwards, so the two are never writing to the same bones at once.
     readonly List<AmbientIdle> paused = new List<AmbientIdle>();
@@ -180,9 +192,101 @@ public class Stage3Cutscene : MonoBehaviour
                 break;
 
             case "sydney-pats-baena":
-                yield return Nudge(sydney, baena);
+                yield return Pat(sydney, baena);
+                break;
+
+            case "baena-scoffs":
+                yield return Scoff(baena);
                 break;
         }
+    }
+
+    /// A hand up and out to somebody's shoulder, and back down. Driven off the
+    /// upper arm rather than an IK target: the hand only has to read as reaching
+    /// in the right direction for half a second at this camera distance.
+    IEnumerator Pat(Transform who, Transform at)
+    {
+        if (who == null || at == null) yield break;
+
+        var idle = who.GetComponent<AmbientIdle>();
+        if (idle != null) { idle.enabled = false; }
+
+        var arm = Bone(who, "R_Upperarm");
+        var fore = Bone(who, "R_Forearm");
+        if (arm == null) { if (idle != null) { idle.enabled = true; idle.Capture(); } yield break; }
+
+        Quaternion armRest = arm.localRotation;
+        Quaternion foreRest = fore != null ? fore.localRotation : Quaternion.identity;
+
+        // Which way is up and forward for this arm, in its parent's space, so
+        // the reach works whichever way the rig has the bone pointing.
+        Vector3 lift = InParent(arm, who.right);
+        Vector3 across = InParent(fore, who.right);
+
+        float t = 0f;
+        const float dur = 0.85f;
+        while (t < dur)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Sin(Mathf.Clamp01(t / dur) * Mathf.PI);   // out and back
+
+            arm.localRotation = Quaternion.AngleAxis(-48f * k, lift) * armRest;
+            if (fore != null) fore.localRotation = Quaternion.AngleAxis(-28f * k, across) * foreRest;
+            yield return null;
+        }
+
+        arm.localRotation = armRest;
+        if (fore != null) fore.localRotation = foreRest;
+
+        if (idle != null) { idle.enabled = true; idle.Capture(); }
+    }
+
+    /// The shrug Baena gives before he walks off - a turn of the head and a hand
+    /// thrown out, held a beat.
+    IEnumerator Scoff(Transform who)
+    {
+        if (who == null) yield break;
+
+        var idle = who.GetComponent<AmbientIdle>();
+        if (idle != null) idle.enabled = false;
+
+        var arm = Bone(who, "R_Upperarm");
+        var head = Bone(who, "Head");
+        Quaternion armRest = arm != null ? arm.localRotation : Quaternion.identity;
+        Quaternion headRest = head != null ? head.localRotation : Quaternion.identity;
+
+        float t = 0f;
+        const float dur = 1.1f;
+        while (t < dur)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Sin(Mathf.Clamp01(t / dur) * Mathf.PI);
+
+            if (arm != null)
+                arm.localRotation = Quaternion.AngleAxis(-32f * k, InParent(arm, who.right)) * armRest;
+            if (head != null)
+                head.localRotation = Quaternion.AngleAxis(26f * k, InParent(head, who.up)) * headRest;
+            yield return null;
+        }
+
+        if (arm != null) arm.localRotation = armRest;
+        if (head != null) head.localRotation = headRest;
+
+        if (idle != null) { idle.enabled = true; idle.Capture(); }
+    }
+
+    static Vector3 InParent(Transform bone, Vector3 worldAxis)
+    {
+        if (bone == null) return worldAxis;
+        return bone.parent == null ? worldAxis
+             : bone.parent.InverseTransformDirection(worldAxis).normalized;
+    }
+
+    static Transform Bone(Transform t, string name)
+    {
+        if (t.name == name) return t;
+        foreach (Transform c in t) { var d = Bone(c, name); if (d != null) return d; }
+        return null;
     }
 
     IEnumerator Walk(Transform who, Transform mark, float seconds)
@@ -208,10 +312,17 @@ public class Stage3Cutscene : MonoBehaviour
         Vector3 from = who.position;
         Quaternion fromRot = who.rotation;
 
-        // Face the way they are going while they go, which is most of what sells
-        // a walk when there is no walk cycle to play.
+        // Face the way they are going while they go.
         Vector3 flat = toPos - from; flat.y = 0f;
         Quaternion facing = flat.sqrMagnitude > 0.01f ? Quaternion.LookRotation(flat) : fromRot;
+
+        // Legs, so the crossing is a walk rather than a slide. Sampled by hand
+        // frame by frame instead of through a controller: these rigs have no
+        // controller, and adding one for a single clip would mean a state
+        // machine, a parameter and an asset per character.
+        var animator = who.GetComponent<Animator>();
+        bool stepping = walkClip != null && animator != null;
+        float clipT = 0f;
 
         float t = 0f;
         while (t < seconds)
@@ -222,6 +333,12 @@ public class Stage3Cutscene : MonoBehaviour
 
             who.position = Vector3.Lerp(from, toPos, eased);
             who.rotation = Quaternion.Slerp(fromRot, facing, Mathf.Clamp01(k * 3f));
+
+            if (stepping)
+            {
+                clipT += Time.deltaTime * walkClipSpeed;
+                walkClip.SampleAnimation(who.gameObject, clipT % walkClip.length);
+            }
             yield return null;
         }
 
@@ -240,28 +357,6 @@ public class Stage3Cutscene : MonoBehaviour
         }
     }
 
-    IEnumerator Nudge(Transform who, Transform at)
-    {
-        if (who == null || at == null) yield break;
-
-        var idle = who.GetComponent<AmbientIdle>();
-        if (idle != null) idle.lookAt = at;
-
-        // A shoulder slap is a lean and a return, not a walk.
-        Vector3 home = who.position;
-        Vector3 toward = Vector3.MoveTowards(home, at.position, 0.35f);
-
-        float t = 0f;
-        const float dur = 0.55f;
-        while (t < dur)
-        {
-            t += Time.deltaTime;
-            float k = Mathf.Sin(Mathf.Clamp01(t / dur) * Mathf.PI);
-            who.position = Vector3.Lerp(home, toward, k);
-            yield return null;
-        }
-        who.position = home;
-    }
 
     void OnClosed()
     {
@@ -276,6 +371,12 @@ public class Stage3Cutscene : MonoBehaviour
 
     IEnumerator HandBack()
     {
+        // Ticked while the picture is still up, so the player sees the task
+        // close rather than finding the tracker already empty on the far side of
+        // the fade.
+        var quest = QuestUI.I;
+        if (quest != null) quest.Complete();
+
         // Out on black, and the swap back to the walking camera happens behind
         // it. Letting the brain drop the last shot in plain view snaps the
         // picture to whatever the follow camera was pointing at.

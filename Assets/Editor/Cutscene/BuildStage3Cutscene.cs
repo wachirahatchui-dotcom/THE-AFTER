@@ -146,6 +146,29 @@ public static class BuildStage3Cutscene
         run.asherStepMark = mkStep;
         run.ethanBlockMark = mkBlock;
 
+        // Asher's walk, played on whoever crosses the floor. Checked binding
+        // by binding: all five rigs share the same bone paths.
+        run.walkClip = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+            "Assets/Animations/Asher/Asher_Walk.anim");
+        if (run.walkClip == null) log.AppendLine("เตือน: หา Asher_Walk.anim ไม่เจอ - การเดินจะเป็นการไถล");
+        else log.AppendLine("ใช้ Asher_Walk.anim เป็นท่าเดินของทุกตัว");
+
+        // ---- the quest ----
+        foreach (var g in Object.FindObjectsByType<TeleportGate>(FindObjectsSortMode.None))
+        {
+            Undo.RecordObject(g, "Build Stage 3 Cutscene");
+            if (g.name.Contains("Back to Stage 2"))
+            {
+                // Arriving in the garage closes the errand Logan gave and opens
+                // the one the scene is actually about.
+                g.completesObjective = true;
+                g.objectiveOnArrival = "Find Ethan and talk to him";
+            }
+            else g.objectiveOnArrival = "";
+            EditorUtility.SetDirty(g);
+        }
+        log.AppendLine("ต่อเควสเข้ากับประตูเทเลพอร์ตแล้ว");
+
         var move = asher.GetComponent<PlayerMovement>();
         var interact = asher.GetComponent<PlayerInteractor>();
         var look = Object.FindAnyObjectByType<FirstPersonCamera>();
@@ -210,7 +233,7 @@ public static class BuildStage3Cutscene
             L("Ethan", "If you don't feel like starving to death in this hole, learn to work as a team!",
               null, shot: "S_Ethan_Block", cont: true),
 
-            L("Baena", "...", null, shot: "S_Baena", cue: "baena-leaves"),
+            L("Baena", "...", null, shot: "S_Baena", cue: "baena-scoffs"),
 
             L("Ethan", "Don't let him get under your skin, Asher. You ready to roll?",
               "08_Ethan_ReadyToRoll", shot: "S_Ethan_Two"),

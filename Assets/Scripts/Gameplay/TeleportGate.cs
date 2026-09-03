@@ -31,9 +31,20 @@ public class TeleportGate : MonoBehaviour
     [Tooltip("How long this gate ignores the player after they arrive, so stepping out of one does not immediately fall back into it.")]
     public float reentryGuard = 1.0f;
 
+    [Header("Quest")]
+    [Tooltip("Objective put up when the player arrives through THIS gate. Left empty the tracker is untouched, which is what a gate the player is only passing back through wants.")]
+    public string objectiveOnArrival;
+
+    [Tooltip("Tick to tick off the standing objective as they arrive, before the new one goes up.")]
+    public bool completesObjective;
+
     // Guards are per-gate rather than global: two gates far apart should not have
     // to share a lock, and the one being arrived at is the only one that needs it.
     float ignoreUntil;
+
+    // Only the first arrival is a story beat; walking back through later should
+    // not re-announce an errand the player is already on.
+    bool announced;
 
     static bool moving;   // one teleport at a time, whatever is touching what
 
@@ -99,12 +110,39 @@ public class TeleportGate : MonoBehaviour
         if (destination != null) destination.ignoreUntil = Time.time + destination.reentryGuard;
         ignoreUntil = Time.time + reentryGuard;
 
+        // The objective belongs to the gate arrived at, not the one left, so it
+        // is the destination that gets to speak.
+        if (destination != null) destination.Announce();
+
         yield return null;
 
         if (fadeSeconds > 0f && ScreenFader.I != null)
             ScreenFader.I.FadeIn(fadeSeconds);
 
         moving = false;
+    }
+
+    /// Puts this gate's objective up, once, the first time somebody arrives here.
+    void Announce()
+    {
+        if (announced || string.IsNullOrEmpty(objectiveOnArrival)) return;
+        announced = true;
+
+        var quest = QuestUI.I;
+        if (quest == null) return;
+
+        if (completesObjective) quest.Complete(0.9f);
+
+        // After the tick, so the player sees the old task close before the new
+        // one arrives rather than the panel simply swapping text under them.
+        StartCoroutine(ShowAfter(completesObjective ? 1.1f : 0f));
+    }
+
+    IEnumerator ShowAfter(float wait)
+    {
+        float t = 0f;
+        while (t < wait) { t += Time.unscaledDeltaTime; yield return null; }
+        QuestUI.I.Show(objectiveOnArrival);
     }
 
     void OnDrawGizmosSelected()
