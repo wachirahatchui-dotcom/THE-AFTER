@@ -170,8 +170,13 @@ public class QuestMarker : MonoBehaviour
         }
         canvas.enabled = true;
 
+        // MenuTheme is where this is tuned, next to the mark's size, so a mark
+        // sitting on somebody's head is a slider away from being lifted off it.
+        // The per-call height is only a fallback for a caller with its own idea.
+        float lift = theme != null ? theme.questMarkerHeight : height;
+
         float bob = Mathf.Sin(Time.time * Mathf.PI * 2f / Mathf.Max(0.1f, bobSeconds)) * bobHeight;
-        holder.position = target.position + Vector3.up * (height + bob);
+        holder.position = target.position + Vector3.up * (lift + bob);
 
         // Face the camera squarely, and keep a constant size on screen rather
         // than shrinking into the distance - it is a signpost, not scenery.
