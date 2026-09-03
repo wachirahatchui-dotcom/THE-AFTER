@@ -1,0 +1,148 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da8222735ff41874c82d55b4dbbd26d7, type: 3}
+  m_Name: MenuTheme
+  m_EditorClassIdentifier: Assembly-CSharp::MenuThemeAsset
+  parchment: {r: 0.831, g: 0.737, b: 0.541, a: 1}
+  parchmentLight: {r: 0.871, g: 0.792, b: 0.616, a: 1}
+  parchmentDeep: {r: 0.756, g: 0.667, b: 0.475, a: 1}
+  ink: {r: 0.11, g: 0.141, b: 0.2, a: 1}
+  inkSoft: {r: 0.11, g: 0.141, b: 0.2, a: 0.7}
+  accent: {r: 0.573, g: 0.286, b: 0.153, a: 1}
+  accentSoft: {r: 0.729, g: 0.435, b: 0.271, a: 1}
+  danger: {r: 0.353, g: 0.11, b: 0.071, a: 1}
+  dangerFill: {r: 0.784, g: 0.616, b: 0.549, a: 1}
+  positive: {r: 0.129, g: 0.31, b: 0.18, a: 1}
+  positiveFill: {r: 0.639, g: 0.757, b: 0.573, a: 1}
+  closeBadge: {r: 0.847, g: 0.357, b: 0.227, a: 1}
+  closeBadgeText: {r: 0.29, g: 0.106, b: 0.047, a: 1}
+  backdropTop: {r: 0.129, g: 0.114, b: 0.106, a: 1}
+  backdropBottom: {r: 0.055, g: 0.051, b: 0.055, a: 1}
+  vignetteColor: {r: 0, g: 0, b: 0, a: 0.9}
+  dustTint: {r: 0.945, g: 0.878, b: 0.729, a: 1}
+  dimColor: {r: 0.04, g: 0.035, b: 0.03, a: 0.72}
+  shadow: {r: 0, g: 0, b: 0, a: 0.3}
+  nightBG: {r: 0.05, g: 0.045, b: 0.05, a: 1}
+  subtitleColor: {r: 0.784, g: 0.729, b: 0.639, a: 1}
+  referenceResolution: {x: 1920, y: 1080}
+  scalerMatch: 0.5
+  cornerRadius: 14
+  titleX: 190
+  titleY: -60
+  titleFontSize: 96
+  subtitleFontSize: 30
+  titleRuleWidth: 620
+  captionFontSize: 44
+  titleLogoHeight: 360
+  titleLogoOffset: {x: -33.666313, y: 0}
+  titleLogoReveal: 1
+  titleLogoTint: {r: 0.871, g: 0.792, b: 0.616, a: 1}
+  columnX: 190
+  columnTop: -370
+  columnGapUnderTitle: 28
+  buttonWidth: 430
+  buttonHeight: 68
+  buttonSpacing: 80
+  buttonFontSize: 30
+  savePanelSize: {x: 980, y: 720}
+  optionsPanelSize: {x: 940, y: 780}
+  creditsPanelSize: {x: 860, y: 760}
+  confirmPanelSize: {x: 720, y: 340}
+  slotRowHeight: 116
+  defaultPanelIn: RiseFade
+  panelDuration: 0.32
+  dimFadeDuration: 0.28
+  buttonFxDuration: 0.18
+  buttonSlideDistance: 14
+  buttonScaleAmount: 1.045
+  buttonTiltDegrees: -1.2
+  introFadeIn: 1.1
+  titleDelay: 0.3
+  titlePerChar: 0.075
+  subtitleDelay: 1.25
+  buttonStaggerStart: 1.35
+  buttonStagger: 0.075
+  musicFadeIn: 3
+  fadeOutDuration: 0.7
+  fadeHold: 0.15
+  fadeInDuration: 0.9
+  enableDust: 1
+  enableGrain: 1
+  enableVignette: 1
+  enableParallax: 1
+  dustCount: 44
+  grainOpacity: 0.018
+  vignetteOpacity: 0.55
+  parallaxStrength: 18
+  dialoguePanelSize: {x: 1520, y: 250}
+  dialogueBottomMargin: 48
+  dialogueFill: {r: 0.075, g: 0.094, b: 0.129, a: 0.88}
+  dialogueBorder: {r: 0.756, g: 0.667, b: 0.475, a: 0.85}
+  dialogueText: {r: 0.925, g: 0.878, b: 0.792, a: 1}
+  dialogueNameFill: {r: 0.831, g: 0.737, b: 0.541, a: 1}
+  dialogueNameText: {r: 0.11, g: 0.141, b: 0.2, a: 1}
+  dialogueNameFontSize: 32
+  dialogueLineFontSize: 31
+  dialogueGrainOpacity: 0.05
+  dialogueOpenDuration: 0.38
+  dialogueCloseDuration: 0.28
+  dialogueCharFade: 0.16
+  dialogueCharRise: 9
+  dialoguePunctuationPause: 0.16
+  dialogueArrowPulseSpeed: 3.2
+  dialogueLineChangeDuration: 0.22
+  dialogueFirstMeetingAnim: DialogueUnfurl
+  dialogueOpenAnims:
+  - DialogueInkBleed
+  - DialogueRiseTilt
+  - DialogueSwipeIn
+  dialogueFinishAnim: DialogueFoldAway
+  dialogueSkipAnim: DialogueInkFade
+  dialogueInterruptAnim: DialogueSinkOut
+  dialoguePromptY: 340
+  dialoguePromptFontSize: 22
+  dialoguePromptBob: 5
+  inventoryPanelSize: {x: 1280, y: 700}
+  inventoryDetailSize: {x: 520, y: 470}
+  inventoryColumns: 5
+  inventoryCellSize: 110
+  inventoryCellSpacing: 14
+  inventoryTitleFontSize: 46
+  inventoryNameFontSize: 34
+  inventoryMetaFontSize: 20
+  inventoryBodyFontSize: 22
+  inventoryCountFontSize: 20
+  inventorySlotFill: {r: 0.13, g: 0.15, b: 0.19, a: 0.85}
+  inventorySlotHover: {r: 0.2, g: 0.22, b: 0.26, a: 0.92}
+  inventorySlotSelected: {r: 0.3, g: 0.18, b: 0.11, a: 0.95}
+  inventorySlotBorder: {r: 0.756, g: 0.667, b: 0.475, a: 0.5}
+  inventorySlotSelectedBorder: {r: 0.729, g: 0.435, b: 0.271, a: 1}
+  inventoryDetailFill: {r: 0.1, g: 0.12, b: 0.155, a: 0.75}
+  inventoryCountText: {r: 0.925, g: 0.878, b: 0.792, a: 0.85}
+  inventoryCountTextSelected: {r: 0.98, g: 0.92, b: 0.84, a: 1}
+  inventoryPanelDuration: 0.34
+  inventorySlotDuration: 0.28
+  inventorySlotStagger: 0.028
+  inventoryHoverDuration: 0.14
+  inventoryHoverLift: 6
+  inventoryGainDuration: 0.26
+  inventoryOpenAnims:
+  - BagOpen
+  - BagUnclasp
+  - BagSwing
+  - BagDrop
+  inventoryCloseAnim: BagClose
+  inventoryCancelAnim: BagSnap
+  defaultMaster: 1
+  defaultMusic: 0.55
+  defaultSfx: 0.8
+  creditsScrollSpeed: 0.035

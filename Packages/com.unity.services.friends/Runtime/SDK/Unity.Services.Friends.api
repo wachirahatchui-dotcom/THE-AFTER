@@ -1,0 +1,314 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace Unity.Services.Friends
+{
+    public class FriendsPackageInitializer : Unity.Services.Core.Internal.IInitializablePackage
+    {
+        public FriendsPackageInitializer() {}
+        public System.Threading.Tasks.Task Initialize(Unity.Services.Core.Internal.CoreRegistry registry);
+    }
+
+    public static class FriendsService
+    {
+        public static IFriendsService Instance { get; }
+    }
+
+    public interface IFriendsService : IMessagingService
+    {
+        public event System.Action<Notifications.IMessageReceivedEvent> MessageReceived;
+        public event System.Action<Notifications.INotificationsStateChangedEvent> NotificationsConnectivityChanged;
+        public event System.Action<Notifications.IPresenceUpdatedEvent> PresenceUpdated;
+        public event System.Action<Notifications.IRelationshipAddedEvent> RelationshipAdded;
+        public event System.Action<Notifications.IRelationshipDeletedEvent> RelationshipDeleted;
+        public System.Collections.Generic.IReadOnlyList<Models.Relationship> Blocks { get; }
+        public System.Collections.Generic.IReadOnlyList<Models.Relationship> Friends { get; }
+        public System.Collections.Generic.IReadOnlyList<Models.Relationship> IncomingFriendRequests { get; }
+        public System.Collections.Generic.IReadOnlyList<Models.Relationship> OutgoingFriendRequests { get; }
+        public System.Collections.Generic.IReadOnlyList<Models.Relationship> Relationships { get; }
+        public System.Threading.Tasks.Task<Models.Relationship> AddBlockAsync(string memberId);
+        public System.Threading.Tasks.Task<Models.Relationship> AddFriendAsync(string memberId);
+        public System.Threading.Tasks.Task<Models.Relationship> AddFriendByNameAsync(string name);
+        public System.Threading.Tasks.Task DeleteBlockAsync(string memberId);
+        public System.Threading.Tasks.Task DeleteFriendAsync(string memberId);
+        public System.Threading.Tasks.Task DeleteIncomingFriendRequestAsync(string memberId);
+        public System.Threading.Tasks.Task DeleteOutgoingFriendRequestAsync(string memberId);
+        public System.Threading.Tasks.Task DeleteRelationshipAsync(string relationshipId);
+        public System.Threading.Tasks.Task ForceRelationshipsRefreshAsync();
+        public System.Threading.Tasks.Task InitializeAsync(Options.InitializeOptions initializeOptions = default(Options.InitializeOptions));
+        public System.Threading.Tasks.Task SetPresenceActivityAsync<T>(T activity) where T : new();
+        public System.Threading.Tasks.Task SetPresenceAsync<T>(Models.Availability availabilityOption, T activity) where T : new();
+        public System.Threading.Tasks.Task SetPresenceAvailabilityAsync(Models.Availability availabilityOption);
+    }
+
+    public interface IMessagingService
+    {
+        public System.Threading.Tasks.Task MessageAsync<T>(string targetUserId, T message) where T : new();
+    }
+}
+
+namespace Unity.Services.Friends.Exceptions
+{
+    public enum FriendsErrorCode
+    {
+        ActionUnauthorizedWhenBlocked = 24011,
+        BadRequest = 24400,
+        DecodeMessageSchema = 24031,
+        DecodePlayerIds = 24026,
+        DecodePresenceSchema = 24020,
+        DecodeXUserHeader = 24036,
+        DuplicateMember = 24032,
+        FriendshipAlreadyExists = 24012,
+        FriendshipDoesNotExist = 24013,
+        GetEnvironmentIDFromHeader = 24002,
+        GetProjectIDFromHeader = 24001,
+        GetSessionIDFromHeader = 24039,
+        GetTargetUserFormat = 24019,
+        GetUserFromHeader = 24000,
+        GetUserTypeFromHeader = 24037,
+        InvalidAvailability = 24021,
+        InvalidCreateMissingCaller = 24035,
+        InvalidCreateSource = 24034,
+        InvalidCreateTarget = 24033,
+        InvalidCreateTooManyMembers = 24040,
+        MaxPayloadSize = 24022,
+        NegativePaginationLimit = 24005,
+        NegativePaginationOffset = 24007,
+        NetworkError = 24602,
+        NotificationConnectionError = 24600,
+        NotificationUnknown = 24601,
+        ProjectNotEnabled = 24024,
+        RelationshipAlreadyExists = 24003,
+        RelationshipNotFound = 24603,
+        RetrievePaginationLimit = 24004,
+        RetrievePaginationOffset = 24006,
+        RetrievePresenceFlag = 24023,
+        RetrieveSocialProfilesFlag = 24027,
+        SwaggerValidation = 24016,
+        Unknown = 0,
+        UnknownFlag = 24028,
+        UserTargetingSelf = 24008,
+        ValidatingJws = 24025,
+    }
+
+    public class FriendsServiceException : Unity.Services.Core.RequestFailedException
+    {
+        public FriendsErrorCode ErrorCode { get; }
+        [System.Obsolete(@"Reason has been changed to StatusCode.", true)] public RelationshipErrorCode Reason { get; }
+        public System.Net.HttpStatusCode StatusCode { get; }
+        public FriendsServiceException(System.Net.HttpStatusCode statusCode, string message, System.Exception innerException, FriendsErrorCode errorCode = FriendsErrorCode.Unknown) {}
+    }
+
+    [System.Obsolete(@"RelationshipErrorCode has been changed to FriendsErrorCode. (UnityUpgradable) -> FriendsErrorCode", true)] public enum RelationshipErrorCode
+    {
+        ActionUnauthorizedWhenBlocked = 20011,
+        BadRequest = 24400,
+        DecodeMessageSchema = 24031,
+        DecodePlayerIds = 24026,
+        DecodePresenceSchema = 24020,
+        DecodeXUserHeader = 24036,
+        DuplicateMember = 24032,
+        FriendshipAlreadyExists = 24012,
+        FriendshipDoesNotExist = 24013,
+        GetEnvironmentIDFromHeader = 24002,
+        GetProjectIDFromHeader = 24001,
+        GetSessionIDFromHeader = 24039,
+        GetTargetUserFormat = 24019,
+        GetUserFromHeader = 24000,
+        GetUserTypeFromHeader = 24037,
+        InvalidAvailability = 24021,
+        InvalidCreateMissingCaller = 24035,
+        InvalidCreateSource = 24034,
+        InvalidCreateTarget = 24033,
+        InvalidCreateTooManyMembers = 24040,
+        MaxPayloadSize = 24022,
+        NegativePaginationLimit = 24005,
+        NegativePaginationOffset = 24007,
+        NetworkError = 24602,
+        NotificationConnectionError = 24600,
+        NotificationUnknown = 24601,
+        ProjectNotEnabled = 24024,
+        RelationshipAlreadyExists = 24003,
+        RetrievePaginationLimit = 24004,
+        RetrievePaginationOffset = 24006,
+        RetrievePresenceFlag = 24023,
+        RetrieveSocialProfilesFlag = 24027,
+        SwaggerValidation = 24016,
+        Unknown = 0,
+        UnknownFlag = 24028,
+        UserTargetingSelf = 24008,
+        ValidatingJws = 24025,
+    }
+
+    public class RelationshipNotFoundException : System.Exception
+    {
+        public RelationshipNotFoundException() {}
+        public RelationshipNotFoundException(string message) {}
+        public RelationshipNotFoundException(string message, System.Exception inner) {}
+    }
+
+    [System.Obsolete(@"RelationshipsServiceException has been changed to FriendsServiceException.", true)] public class RelationshipsServiceException : Unity.Services.Core.RequestFailedException
+    {
+        public RelationshipErrorCode ErrorCode { get; }
+        [System.Obsolete(@"Reason has been changed to StatusCode within the FriendsServiceException.", true)] public RelationshipErrorCode Reason { get; }
+        public RelationshipsServiceException(RelationshipErrorCode reason, string message, System.Exception innerException, RelationshipErrorCode errorCode = RelationshipErrorCode.Unknown) {}
+    }
+}
+
+namespace Unity.Services.Friends.Models
+{
+    [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))] [UnityEngine.Scripting.Preserve] public enum Availability
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"AWAY")] Away = 3,
+        [System.Runtime.Serialization.EnumMember(Value = @"BUSY")] Busy = 2,
+        [System.Runtime.Serialization.EnumMember(Value = @"INVISIBLE")] Invisible = 4,
+        [System.Runtime.Serialization.EnumMember(Value = @"OFFLINE")] Offline = 5,
+        [System.Runtime.Serialization.EnumMember(Value = @"ONLINE")] Online = 1,
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")] Unknown = 0,
+    }
+
+    public class Member
+    {
+        public string Id { get; }
+        public Presence Presence { get; }
+        public Profile Profile { get; }
+        public MemberRole Role { get; }
+        public Member() {}
+    }
+
+    [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))] [UnityEngine.Scripting.Preserve] public enum MemberRole
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"NONE")] None = 3,
+        [System.Obsolete(@"NONE has been changed to None. (UnityUpgradable) -> None", true)] NONE = -3,
+        [System.Runtime.Serialization.EnumMember(Value = @"SOURCE")] Source = 2,
+        [System.Obsolete(@"SOURCE has been changed to Source. (UnityUpgradable) -> Source", true)] SOURCE = -2,
+        [System.Runtime.Serialization.EnumMember(Value = @"TARGET")] Target = 1,
+        [System.Obsolete(@"TARGET has been changed to Target. (UnityUpgradable) -> Target", true)] TARGET = -1,
+    }
+
+    public class Presence
+    {
+        public Availability Availability { get; }
+        public System.DateTime LastSeen { get; }
+        public Presence() {}
+        public T GetActivity<T>() where T : new();
+    }
+
+    [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))] [System.Obsolete(@"PresenceAvailabilityOptions has been changed to Availability. (UnityUpgradable) -> Availability", true)] [UnityEngine.Scripting.Preserve] public enum PresenceAvailabilityOptions
+    {
+        [System.Obsolete(@"AWAY has been changed to Away. (UnityUpgradable) -> Availability.Away", true)] [System.Runtime.Serialization.EnumMember(Value = @"AWAY")] AWAY = 3,
+        [System.Obsolete(@"BUSY has been changed to Busy. (UnityUpgradable) -> Availability.Busy", true)] [System.Runtime.Serialization.EnumMember(Value = @"BUSY")] BUSY = 2,
+        [System.Obsolete(@"INVISIBLE has been changed to Invisible. (UnityUpgradable) -> Availability.Invisible", true)] [System.Runtime.Serialization.EnumMember(Value = @"INVISIBLE")] INVISIBLE = 4,
+        [System.Obsolete(@"OFFLINE has been changed to Offline. (UnityUpgradable) -> Availability.Offline", true)] [System.Runtime.Serialization.EnumMember(Value = @"OFFLINE")] OFFLINE = 5,
+        [System.Obsolete(@"ONLINE has been changed to Online. (UnityUpgradable) -> Availability.Online", true)] [System.Runtime.Serialization.EnumMember(Value = @"ONLINE")] ONLINE = 1,
+        [System.Obsolete(@"UNKNOWN has been changed to Unknown. (UnityUpgradable) -> Availability.Unknown", true)] [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")] UNKNOWN = 6,
+    }
+
+    public class Profile
+    {
+        public string Name { get; }
+        public Profile() {}
+    }
+
+    public class Relationship
+    {
+        public string Id { get; }
+        public Member Member { get; }
+        public RelationshipType Type { get; }
+        public Relationship() {}
+    }
+
+    [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))] [UnityEngine.Scripting.Preserve] public enum RelationshipType
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"BLOCK")] Block = 2,
+        [System.Obsolete(@"BLOCK has been changed to Block. (UnityUpgradable) -> Block", true)] BLOCK = -2,
+        [System.Runtime.Serialization.EnumMember(Value = @"FRIEND")] Friend = 1,
+        [System.Obsolete(@"FRIEND has been changed to Friend. (UnityUpgradable) -> Friend", true)] FRIEND = -1,
+        [System.Obsolete(@"FRIEND_REQUEST has been changed to FriendRequest. (UnityUpgradable) -> FriendRequest", true)] FRIEND_REQUEST = -3,
+        [System.Runtime.Serialization.EnumMember(Value = @"FRIEND_REQUEST")] FriendRequest = 3,
+    }
+}
+
+namespace Unity.Services.Friends.Notifications
+{
+    public class FriendsEventCallbacks
+    {
+        public event System.Action<FriendsEventConnectionState> FriendsEventConnectionStateChanged;
+        public event System.Action<IMessageReceivedEvent> MessageReceived;
+        public event System.Action<IPresenceUpdatedEvent> PresenceUpdated;
+        public event System.Action<IRelationshipAddedEvent> RelationshipAdded;
+        public event System.Action<IRelationshipDeletedEvent> RelationshipDeleted;
+        public FriendsEventCallbacks() {}
+    }
+
+    public enum FriendsEventConnectionState
+    {
+        Error = 5,
+        Subscribed = 3,
+        Subscribing = 2,
+        Unknown = 0,
+        Unsubscribed = 1,
+        Unsynced = 4,
+    }
+
+    public interface IFriendsEvents
+    {
+        public FriendsEventCallbacks Callbacks { get; }
+        public System.Threading.Tasks.Task SubscribeAsync();
+        public System.Threading.Tasks.Task UnsubscribeAsync();
+    }
+
+    public interface IMessageReceivedEvent
+    {
+        public string UserId { get; }
+        public T GetAs<T>() where T : new();
+    }
+
+    public interface INotificationsStateChangedEvent
+    {
+        public FriendsEventConnectionState State { get; }
+    }
+
+    public interface IPresenceUpdatedEvent
+    {
+        public string ID { get; }
+        public Unity.Services.Friends.Models.Presence Presence { get; }
+    }
+
+    public interface IRelationshipAddedEvent
+    {
+        public Unity.Services.Friends.Models.Relationship Relationship { get; }
+    }
+
+    public interface IRelationshipDeletedEvent
+    {
+        public Unity.Services.Friends.Models.Relationship Relationship { get; }
+    }
+}
+
+namespace Unity.Services.Friends.Options
+{
+    public class InitializeOptions
+    {
+        public InitializeOptions() {}
+        public InitializeOptions WithEvents(bool withEvents);
+        public InitializeOptions WithMemberPresence(bool withPresence);
+        public InitializeOptions WithMemberProfile(bool withProfile);
+    }
+
+    public class PagingOptions
+    {
+        public int Limit { get; set; }
+        public int Offset { get; set; }
+        public PagingOptions() {}
+    }
+
+    public class RelationshipOptions
+    {
+        public RelationshipOptions() {}
+        public RelationshipOptions WithMemberPresence(bool withPresence);
+        public RelationshipOptions WithMemberProfile(bool withProfile);
+        public RelationshipOptions WithPaging(PagingOptions pagingOptions);
+        public RelationshipOptions WithTypes(Unity.Services.Friends.Models.RelationshipType relationshipType);
+    }
+}

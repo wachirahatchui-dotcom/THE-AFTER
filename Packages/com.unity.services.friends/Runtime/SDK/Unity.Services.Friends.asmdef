@@ -1,0 +1,19 @@
+{
+    "name": "Unity.Services.Friends",
+    "references": [
+        "Unity.Services.Authentication",
+        "Unity.Services.Core",
+        "Unity.Services.Core.Internal",
+        "Unity.Services.Friends.Internal",
+        "Unity.Services.Friends.Internal.Generated"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
