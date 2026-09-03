@@ -67,7 +67,17 @@ public class CutsceneChapter1 : MonoBehaviour
     public string walkPrompt = "W A S D  to move        SHIFT  to run        SPACE  to jump";
 
     [Tooltip("The objective in the corner. Stays until he reaches the fire.")]
-    public string walkObjective = "Join Logan at the campfire";
+    public string walkObjective = "Go to the campfire and talk with Logan";
+
+    [Header("Waiting for the player")]
+    [Tooltip("Logan, so he can breathe and look about while the player walks over instead of sitting frozen on the last frame of the scene that just ended.")]
+    public SeatedIdle waitingIdle;
+
+    [Tooltip("What the quest mark floats over. Logan's head, or Logan himself.")]
+    public Transform markerTarget;
+
+    [Tooltip("How high above that the mark sits, in metres.")]
+    public float markerHeight = 2.0f;
 
     [Tooltip("How long the controls hint stays up before it gets out of the way.")]
     public float walkPromptSeconds = 7f;
@@ -189,11 +199,33 @@ public class CutsceneChapter1 : MonoBehaviour
             campfire.onUsed += OnCampfireUsed;
         }
 
+        // Logan takes over his own bones from here.
+        //
+        // Timeline drops the ones it was driving the moment its director stops,
+        // and his Animator has no controller behind it to catch them - so without
+        // this he holds the last frame of the waking scene, rigid, for the whole
+        // walk over. Capture() first: the pose to breathe around is the one the
+        // scene just left him in, not whatever the prefab was saved with.
+        if (waitingIdle != null)
+        {
+            waitingIdle.Capture();
+            waitingIdle.enabled = true;
+        }
+
         // Two different jobs, two different places on screen. The controls hint
         // is a one-off that gets out of the way; the objective is a reminder that
         // has to still be there when the player looks up from wandering.
         quest = QuestUI.I;
         quest.Show(walkObjective);
+
+        // And a third job the other two cannot do: which way to walk. The text
+        // says where to go, the mark over Logan says where that is.
+        var mark = markerTarget != null ? markerTarget
+                 : waitingIdle != null ? waitingIdle.transform
+                 : null;
+
+        if (mark != null)
+            QuestMarker.Show(mark, player != null ? player.transform : null, markerHeight);
 
         promptRoutine = StartCoroutine(ShowWalkPrompt());
     }
@@ -216,7 +248,14 @@ public class CutsceneChapter1 : MonoBehaviour
 
         if (promptRoutine != null) { StopCoroutine(promptRoutine); promptRoutine = null; }
         TutorialPrompt.I.Hide();
+        QuestMarker.Hide();
         if (quest != null) quest.Complete();
+
+        // Hand the bones back before the Timeline reaches for them. This writes
+        // in LateUpdate, which is after Timeline has had its say, so leaving it
+        // on would mean the idle quietly overwriting the first frames of the
+        // conversation - Logan breathing over his own performance.
+        if (waitingIdle != null) waitingIdle.enabled = false;
 
         // Control off before the Timeline is evaluated: the CharacterController
         // writes to the same transform the animation is about to place at the log,

@@ -651,6 +651,11 @@ MonoBehaviour:
   eyeAboveHeadBone: 0.235
   captureCursor: 1
   cutsceneHeadLook: 9
+--- !u!4 &155221878 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2344355679490850745, guid: 68a465de7bd11344ebc7ba24b8d715fe, type: 3}
+  m_PrefabInstance: {fileID: 479097188}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &155641690
 GameObject:
   m_ObjectHideFlags: 0
@@ -4032,6 +4037,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7605882139279289496, guid: 68a465de7bd11344ebc7ba24b8d715fe, type: 3}
       insertIndex: -1
       addedObject: {fileID: 479097190}
+    - targetCorrespondingSourceObject: {fileID: 7605882139279289496, guid: 68a465de7bd11344ebc7ba24b8d715fe, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 479097193}
   m_SourcePrefab: {fileID: 100100000, guid: 68a465de7bd11344ebc7ba24b8d715fe, type: 3}
 --- !u!1 &479097189 stripped
 GameObject:
@@ -4162,6 +4170,31 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7117469919604291106, guid: 68a465de7bd11344ebc7ba24b8d715fe, type: 3}
   m_PrefabInstance: {fileID: 479097188}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &479097193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 479097189}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44871c87bb8043e4ba4512d112b9b287, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SeatedIdle
+  chest: {fileID: 155221878}
+  waist: {fileID: 950493499}
+  head: {fileID: 1838355775}
+  frame: {fileID: 479097192}
+  breathDegrees: 1.7
+  breathsPerMinute: 12
+  swayDegrees: 1.2
+  swaySeconds: 8.5
+  driftDegrees: 2.2
+  driftSeconds: 5.5
+  glanceDegrees: 13
+  glanceEvery: {x: 4.5, y: 10}
+  glanceSeconds: 1.4
 --- !u!1 &492613699
 GameObject:
   m_ObjectHideFlags: 0
@@ -6159,6 +6192,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 543959536}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &950493499 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8942052812350825795, guid: 68a465de7bd11344ebc7ba24b8d715fe, type: 3}
+  m_PrefabInstance: {fileID: 479097188}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &969526492
 GameObject:
   m_ObjectHideFlags: 0
@@ -8905,7 +8943,10 @@ MonoBehaviour:
   walkStart: {fileID: 1881585256}
   campfire: {fileID: 1228713553}
   walkPrompt: W A S D  to move        SHIFT  to run        SPACE  to jump
-  walkObjective: Join Logan at the campfire
+  walkObjective: Go to the campfire and talk with Logan
+  waitingIdle: {fileID: 479097193}
+  markerTarget: {fileID: 1838355775}
+  markerHeight: 0.45
   walkPromptSeconds: 7
   handoverFade: 0.9
 --- !u!1 &1682388947
@@ -9099,6 +9140,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1921703691}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1838355775 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8600656739802078859, guid: 68a465de7bd11344ebc7ba24b8d715fe, type: 3}
+  m_PrefabInstance: {fileID: 479097188}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1881585255
 GameObject:
   m_ObjectHideFlags: 0

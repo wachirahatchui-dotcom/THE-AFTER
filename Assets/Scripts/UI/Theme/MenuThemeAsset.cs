@@ -65,6 +65,17 @@ public class MenuThemeAsset : ScriptableObject
     [Tooltip("Size of the on-screen hint text (\"Press E to sit\", \"WASD to move\", ...).")]
     public int tutorialFontSize = 38;
 
+    [Header("Quest tracker")]
+    [Tooltip("The small OBJECTIVE label above the task.")]
+    public int questHeadingFontSize = 22;
+    [Tooltip("The task itself. This is the line the player actually reads.")]
+    public int questObjectiveFontSize = 28;
+    [Tooltip("Slab behind the tracker. Alpha below 1 keeps the camp readable through it.")]
+    public Color questPanelFill = new Color(0.071f, 0.086f, 0.118f, 0.74f);
+    public Color questPanelBorder = new Color(0.756f, 0.667f, 0.475f, 0.42f);
+    [Tooltip("Side of the empty tick box.")]
+    public float questBoxSize = 26f;
+
     // Used only when Assets/Resources/Logo/TheAfterLogo.png exists; with no
     // file there the typed title is drawn instead and these do nothing.
     [Header("Main menu logo")]
