@@ -50,6 +50,12 @@ crashlytics-build.properties
 .idea/
 
 # ============================================================
+# Autosync's own log - would otherwise be a change every cycle,
+# which would make the watcher commit forever just to record itself
+# ============================================================
+Tools/GitAutosync/*.log
+
+# ============================================================
 # OS clutter
 # ============================================================
 .DS_Store
