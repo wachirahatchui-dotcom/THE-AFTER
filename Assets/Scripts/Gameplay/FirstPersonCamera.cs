@@ -59,6 +59,19 @@ public class FirstPersonCamera : MonoBehaviour
     [Range(0f, 30f)]
     public float cutsceneHeadLook = 9f;
 
+    // Point the view somewhere without the player having moved the mouse.
+    //
+    // The yaw lives here rather than on the body: this camera writes it to
+    // the player transform every frame, so anything that turns the player
+    // directly is overwritten on the very next update. A teleport that sets
+    // him down facing into a room has to say so here, or he arrives looking
+    // at the wall he just walked through.
+    public void SetYaw(float degrees)
+    {
+        yaw = degrees;
+        if (player != null) player.rotation = Quaternion.Euler(0f, yaw, 0f);
+    }
+
     float yaw, pitch;
     PlayerMovement movement;
     SkinnedMeshRenderer[] body;
