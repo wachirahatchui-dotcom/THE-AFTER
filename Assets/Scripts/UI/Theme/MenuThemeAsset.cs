@@ -77,7 +77,7 @@ public class MenuThemeAsset : ScriptableObject
 
     [Header("Quest marker (the ! over the target)")]
     [Tooltip("How tall the mark is as a share of screen height. 0.05 is one twentieth of the screen - raise it to make the mark bigger, lower it to make it smaller. Size on screen stays the same however far away the target is.")]
-    [Range(0.01f, 0.25f)] public float questMarkerScreenHeight = 0.045f;
+    [Range(0.01f, 0.5f)] public float questMarkerScreenHeight = 0.26f;
 
     [Tooltip("Inside this many metres the mark fades out and leaves the screen to the interact prompt.")]
     public float questMarkerHideWithin = 4.5f;
