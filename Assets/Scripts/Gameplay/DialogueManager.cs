@@ -128,15 +128,10 @@ public class DialogueManager : MonoBehaviour
 
     void ShowLine()
     {
-        string line = npc.TextAt(index);
-        bool last = index >= npc.LineCount - 1;
+        string line = (npc.lines != null && index < npc.lines.Length) ? npc.lines[index] : "...";
+        bool last = npc.lines == null || index >= npc.lines.Length - 1;
 
-        // Asked per line rather than once for the conversation. The box was
-        // always built to handle the speaker changing - it takes a
-        // speakerChanged flag and re-stamps the name plate on it - but every
-        // line used to be attributed to whoever the player pressed E on, so a
-        // scene with more than one person in it could not be written.
-        bool speakerChanged = view.SetSpeaker(npc.SpeakerAt(index));
+        bool speakerChanged = view.SetSpeaker(npc.npcName);
 
         PlayVoice();
 
@@ -188,23 +183,15 @@ public class DialogueManager : MonoBehaviour
 
     void PlayVoice()
     {
-        if (voice == null || npc == null) return;
+        if (voice == null || npc == null || npc.lineClips == null) return;
 
-        // A line that continues the one before it is a piece of a speech that is
-        // already playing. Touching the source here would restart the speech at
-        // every piece, which is the opposite of what cutting it up was for.
-        if (npc.ContinuesVoiceAt(index)) return;
-
-        var clip = npc.ClipAt(index);
-
-        // An unvoiced line still ends the previous one. Letting the last clip run
-        // on under a line nobody speaks reads as the wrong character talking.
-        if (clip == null) { voice.Stop(); return; }
-
-        voice.Stop();
-        voice.clip = clip;
-        voice.volume = GameSettings.VoiceVolume;   // its own slider
-        voice.Play();
+        if (index < npc.lineClips.Length && npc.lineClips[index] != null)
+        {
+            voice.Stop();
+            voice.clip = npc.lineClips[index];
+            voice.volume = GameSettings.VoiceVolume;   // its own slider
+            voice.Play();
+        }
     }
 
     public void Advance()
@@ -222,7 +209,7 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        if (npc != null && index < npc.LineCount - 1)
+        if (npc != null && npc.lines != null && index < npc.lines.Length - 1)
         {
             index++;
             ShowLine();
@@ -235,7 +222,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (!IsActive) return;
 
-        bool midway = npc != null && index < npc.LineCount - 1;
+        bool midway = npc != null && npc.lines != null && index < npc.lines.Length - 1;
         Close(midway ? DialogueAnimations.Exit.Skipped : DialogueAnimations.Exit.Finished);
     }
 
