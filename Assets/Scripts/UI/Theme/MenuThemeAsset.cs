@@ -66,15 +66,21 @@ public class MenuThemeAsset : ScriptableObject
     public int tutorialFontSize = 38;
 
     [Header("Quest tracker")]
-    [Tooltip("The small OBJECTIVE label above the task.")]
+    [Tooltip("The \"Main Objectives\" label above the task.")]
     public int questHeadingFontSize = 22;
     [Tooltip("The task itself. This is the line the player actually reads.")]
-    public int questObjectiveFontSize = 28;
+    public int questObjectiveFontSize = 26;
     [Tooltip("Slab behind the tracker. Alpha below 1 keeps the camp readable through it.")]
-    public Color questPanelFill = new Color(0.071f, 0.086f, 0.118f, 0.74f);
-    public Color questPanelBorder = new Color(0.756f, 0.667f, 0.475f, 0.42f);
-    [Tooltip("Side of the empty tick box.")]
-    public float questBoxSize = 26f;
+    public Color questPanelFill = new Color(0.055f, 0.063f, 0.075f, 0.80f);
+    [Tooltip("Side of the empty tick box, in pixels.")]
+    public float questBoxSize = 20f;
+
+    [Header("Quest marker (the ! over the target)")]
+    [Tooltip("How tall the mark is as a share of screen height. 0.05 is one twentieth of the screen - raise it to make the mark bigger, lower it to make it smaller. Size on screen stays the same however far away the target is.")]
+    [Range(0.01f, 0.25f)] public float questMarkerScreenHeight = 0.045f;
+
+    [Tooltip("Inside this many metres the mark fades out and leaves the screen to the interact prompt.")]
+    public float questMarkerHideWithin = 4.5f;
 
     // Used only when Assets/Resources/Logo/TheAfterLogo.png exists; with no
     // file there the typed title is drawn instead and these do nothing.

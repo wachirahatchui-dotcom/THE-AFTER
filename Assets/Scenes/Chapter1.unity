@@ -9409,6 +9409,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -23.45
       objectReference: {fileID: 0}
+    - target: {fileID: 5710750251639980103, guid: 23013e7298a59f04da5b6e086dd9bd63, type: 3}
+      propertyPath: m_Name
+      value: Teleport Gate to Stage 3
+      objectReference: {fileID: 0}
     - target: {fileID: 7291872243013070160, guid: 23013e7298a59f04da5b6e086dd9bd63, type: 3}
       propertyPath: m_Name
       value: Bed Roll

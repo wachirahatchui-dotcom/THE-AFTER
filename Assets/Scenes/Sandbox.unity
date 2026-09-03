@@ -8979,7 +8979,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d023abc52edc34e40b7d1732911d98ba, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -32.2
+      value: -12.7
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d023abc52edc34e40b7d1732911d98ba, type: 3}
       propertyPath: m_LocalPosition.y
@@ -8987,7 +8987,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d023abc52edc34e40b7d1732911d98ba, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -41.9
+      value: -30.9
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d023abc52edc34e40b7d1732911d98ba, type: 3}
       propertyPath: m_LocalRotation.w
@@ -9207,6 +9207,7 @@ MonoBehaviour:
   stage1: {fileID: 263480129}
   stageWake: {fileID: 1012903374}
   stageTalk: {fileID: 467579779}
+  stageSets: []
   player: {fileID: 654763910}
   playerControl:
   - {fileID: 654763917}
@@ -9218,6 +9219,9 @@ MonoBehaviour:
   campfire: {fileID: 1228713553}
   walkPrompt: W A S D  to move        SHIFT  to run        SPACE  to jump
   walkObjective: Join Logan at the campfire
+  waitingIdle: {fileID: 0}
+  markerTarget: {fileID: 0}
+  markerHeight: 2
   walkPromptSeconds: 7
   handoverFade: 0.9
 --- !u!1 &1682388947

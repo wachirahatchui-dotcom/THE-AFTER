@@ -30,17 +30,25 @@ public class QuestMarker : MonoBehaviour
     [Tooltip("How high above the target's own origin the mark sits.")]
     public float defaultHeight = 2.1f;
 
-    [Tooltip("Within this many metres the mark fades out and leaves the field to the interact prompt.")]
+    [Tooltip("Within this many metres the mark fades out and leaves the field to the interact prompt. MenuTheme overrides this.")]
     public float hideWithin = 4.5f;
 
     [Tooltip("How far it rises and falls.")]
-    public float bobHeight = 0.13f;
+    public float bobHeight = 0.11f;
     public float bobSeconds = 1.9f;
 
     public float fadeSpeed = 3.2f;
 
-    [Tooltip("On-screen size of the mark, in metres at the target's distance.")]
-    public float scale = 0.0055f;
+    // How big the mark is, stated as a share of the screen's height.
+    //
+    // The obvious way to size a world-space marker is a scale multiplied by
+    // distance, and it is wrong in a way that is hard to see coming: the number
+    // means nothing on its own, so it gets guessed, and a guess that looks right
+    // in one shot is enormous in the next. Screen height is a quantity that can
+    // actually be reasoned about - 0.05 is one twentieth of the screen, and it
+    // stays one twentieth at any distance and any field of view.
+    [Tooltip("Share of screen height the mark takes up. Set in MenuTheme; this is the fallback.")]
+    [Range(0.01f, 0.25f)] public float screenHeight = 0.045f;
 
     Transform player;
 
@@ -141,13 +149,16 @@ public class QuestMarker : MonoBehaviour
             return;
         }
 
+        var theme = MenuTheme.Current;
+        float near = theme != null ? theme.questMarkerHideWithin : hideWithin;
+
         // Close enough to interact means the interact prompt is on screen, and
         // two instructions at once is one too many.
         float want = wanted;
-        if (want > 0f && player != null && hideWithin > 0f)
+        if (want > 0f && player != null && near > 0f)
         {
             float d = Vector3.Distance(player.position, target.position);
-            if (d <= hideWithin) want = 0f;
+            if (d <= near) want = 0f;
         }
 
         Fade(want);
@@ -166,8 +177,19 @@ public class QuestMarker : MonoBehaviour
         // than shrinking into the distance - it is a signpost, not scenery.
         holder.rotation = cam.transform.rotation;
 
+        // Work out how tall the screen is in world units at the target's
+        // distance, take the share of it that was asked for, and scale the rect
+        // to match. Doing it from the camera's own field of view is what makes
+        // the number mean the same thing on every shot and every screen.
+        float share = theme != null ? theme.questMarkerScreenHeight : screenHeight;
         float dist = Vector3.Distance(cam.transform.position, holder.position);
-        holder.localScale = Vector3.one * Mathf.Max(0.0005f, scale * dist);
+
+        float screenWorldHeight = cam.orthographic
+            ? cam.orthographicSize * 2f
+            : 2f * dist * Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad);
+
+        float wantHeight = screenWorldHeight * Mathf.Max(0.001f, share);
+        holder.localScale = Vector3.one * (wantHeight / Mathf.Max(1f, holder.sizeDelta.y));
     }
 
     void Fade(float want)
