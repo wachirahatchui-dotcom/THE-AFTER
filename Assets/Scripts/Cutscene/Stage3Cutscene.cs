@@ -196,7 +196,12 @@ public class Stage3Cutscene : MonoBehaviour
                 break;
 
             case "baena-scoffs":
+                // Scoffs, then turns for the vehicle. The scene does not wait for
+                // the walk - Ethan's next line starts over his exit, which is what
+                // makes it read as being dismissed rather than excused.
                 yield return Scoff(baena);
+                if (baena != null)
+                    StartCoroutine(Walk(baena, null, walkSeconds, baenaHome, baenaHomeRot));
                 break;
         }
     }
@@ -393,10 +398,37 @@ public class Stage3Cutscene : MonoBehaviour
         foreach (var idle in paused) if (idle != null) { idle.enabled = true; idle.Capture(); }
         paused.Clear();
 
+        // Whoever ended the scene away from their bench stops miming work.
+        //
+        // Working is a pose plus hand movement, and the pose belongs to a
+        // particular bench: play it two metres away and the character is
+        // tightening a bolt in mid-air. They are about to load up and leave
+        // anyway, so standing and breathing is both correct and what the script
+        // has them doing.
+        SettleAwayFromWork(ethan != null ? ethan.transform : null, ethanBlockMark);
+        SettleAwayFromWork(baena, baenaMark);
+
         yield return null;
 
         if (ScreenFader.I != null) ScreenFader.I.FadeIn(closingFade);
         running = false;
+    }
+
+    /// Drops a character out of Working once they are standing somewhere other
+    /// than the bench that pose was built around.
+    void SettleAwayFromWork(Transform who, Transform mark)
+    {
+        if (who == null || mark == null) return;
+
+        var idle = who.GetComponent<AmbientIdle>();
+        if (idle == null || idle.mood != AmbientIdle.Mood.Working) return;
+
+        // Half a metre of slack: somebody who never really left their bench
+        // should carry on working at it.
+        if (Vector3.Distance(who.position, mark.position) > 0.5f) return;
+
+        idle.mood = AmbientIdle.Mood.Breathing;
+        idle.Capture();
     }
 
     void SetControl(bool on)
