@@ -80,23 +80,38 @@ public static class BuildStage3Cutscene
         made.Add(Shot(cams, "S_Wide", ethanAt + intoRoom * 6.5f + Vector3.up * 1.4f,
                       ethanAt + Vector3.up * 0.9f, 42f));
 
+        // Whose head each shot holds on. Handing the camera a bone rather than a
+        // point is what lets somebody miss their mark by half a metre - which
+        // they all do - without ending up off the side of the frame.
+        Transform hEthan = Bone(ethan, "Head");
+        Transform hBaena = Bone(baena, "Head");
+        Transform hAsher = Bone(asher, "Head");
+
         // Ethan over Asher's shoulder, and the reverse.
-        made.Add(Shot(cams, "S_Ethan_OTS", Behind(asherAt, ethanAt, 0.75f, 0.35f), Head(ethan), 34f));
-        made.Add(Shot(cams, "S_Ethan", Toward(ethanAt, asherAt, 1.5f), Head(ethan), 30f));
-        made.Add(Shot(cams, "S_Ethan_Tight", Toward(ethanAt, asherAt, 1.15f), Head(ethan), 26f));
-        made.Add(Shot(cams, "S_Asher", Toward(asherAt, ethanAt, 1.5f), HeadAt(asherAt), 30f));
-        made.Add(Shot(cams, "S_Asher_Tight", Toward(asherAt, ethanAt, 1.1f), HeadAt(asherAt), 26f));
+        made.Add(Tracking(cams, "S_Ethan_OTS", Behind(asherAt, ethanAt, 0.75f, 0.35f), hEthan, 34f));
+        made.Add(Tracking(cams, "S_Ethan", Toward(ethanAt, asherAt, 1.5f), hEthan, 30f));
+        made.Add(Tracking(cams, "S_Ethan_Tight", Toward(ethanAt, asherAt, 1.15f), hEthan, 26f));
+        made.Add(Tracking(cams, "S_Asher", Toward(asherAt, ethanAt, 1.5f), hAsher, 30f));
+        made.Add(Tracking(cams, "S_Asher_Tight", Toward(asherAt, ethanAt, 1.1f), hAsher, 26f));
+
+        // Asher again once he has stepped up to Baena.
+        //
+        // He moves a metre and a quarter across the floor on his own line and
+        // turns to face a different person, and the two shots above were built
+        // for where he was standing before that. Reusing them after the step put
+        // the camera behind his shoulder for both of his remaining lines.
+        made.Add(Tracking(cams, "S_Asher_Step", Toward(asherStepAt, baenaAt, 1.25f), hAsher, 28f));
 
         // Baena, framed slightly from below so he reads as looming.
-        made.Add(Shot(cams, "S_Baena", Toward(baenaAt, asherAt, 1.7f, -0.25f), HeadAt(baenaAt), 32f));
-        made.Add(Shot(cams, "S_Baena_Tight", Toward(baenaAt, asherAt, 1.2f, -0.2f), HeadAt(baenaAt), 26f));
+        made.Add(Tracking(cams, "S_Baena", Toward(baenaAt, asherAt, 1.7f, -0.25f), hBaena, 32f));
+        made.Add(Tracking(cams, "S_Baena_Tight", Toward(baenaAt, asherAt, 1.2f, -0.2f), hBaena, 26f));
 
         // The three of them, for the shove. The geography has to read.
         Vector3 triCentre = (asherStepAt + baenaAt + ethanBlockAt) / 3f;
         made.Add(Shot(cams, "S_Three", triCentre + intoRoom * 4.2f + Vector3.up * 0.8f,
                       triCentre + Vector3.up * 0.75f, 40f));
 
-        made.Add(Shot(cams, "S_Ethan_Block", Toward(ethanBlockAt, baenaAt, 1.9f), HeadAt(ethanBlockAt), 32f));
+        made.Add(Tracking(cams, "S_Ethan_Block", Toward(ethanBlockAt, baenaAt, 1.9f), hEthan, 32f));
         // The two of them together, from Baena's side of the argument.
         //
         // It used to sit between Ethan and Asher, which is the one place in the
@@ -106,8 +121,8 @@ public static class BuildStage3Cutscene
         // shoulder is where both faces are pointed, and it keeps the argument on
         // the same side of the line as the rest of the scene.
         Vector3 pairCentre = Vector3.Lerp(ethanBlockAt, asherStepAt, 0.5f);
-        made.Add(Shot(cams, "S_Ethan_Two", Behind(baenaAt, pairCentre, 1.15f, 0.6f),
-                      Vector3.Lerp(HeadAt(ethanBlockAt), HeadAt(asherStepAt), 0.5f), 36f));
+        made.Add(Shot(cams, "S_Ethan_Two", Behind(baenaAt, pairCentre, 1.75f, 0.75f),
+                      Vector3.Lerp(HeadAt(ethanBlockAt), HeadAt(asherStepAt), 0.5f), 44f));
 
         // Sydney and Baena at her desk, and Alex across the room.
         //
@@ -119,8 +134,8 @@ public static class BuildStage3Cutscene
         // behind him. What a shot of somebody wants is the space they are
         // facing into, swung off the centre line far enough to be a face rather
         // than a passport photograph.
-        made.Add(Shot(cams, "S_Sydney", Framed(sydney, 2.0f), Head(sydney), 34f));
-        made.Add(Shot(cams, "S_Alex", Framed(alex, 3.0f), Head(alex), 38f));
+        made.Add(Tracking(cams, "S_Sydney", Framed(sydney, 2.0f), Bone(sydney, "Head"), 34f));
+        made.Add(Tracking(cams, "S_Alex", Framed(alex, 3.0f), Bone(alex, "Head"), 38f));
 
         log.AppendFormat("สร้างกล้อง {0} ตัว\n", made.Count);
 
@@ -242,10 +257,10 @@ public static class BuildStage3Cutscene
               null, shot: "S_Baena_Tight", cont: true),
 
             L("Asher", "Say that to my face again, you bastard!", "06_Asher_SayThatAgain",
-              shot: "S_Asher", cue: "asher-steps-up"),
+              shot: "S_Asher_Step", cue: "asher-steps-up"),
 
             L("Ethan", "That's enough! Both of you! Baena, shut your mouth.",
-              "07_Ethan_Enough", shot: "S_Three", cue: "ethan-blocks"),
+              "07_Ethan_Enough", shot: "S_Ethan_Block", cue: "ethan-blocks"),
 
             L("Ethan", "We need every body we can get, and Asher volunteered.",
               null, shot: "S_Ethan_Block", cont: true),
@@ -260,7 +275,7 @@ public static class BuildStage3Cutscene
 
             // No recording for this one - it plays as a caption, the way
             // "Get moving." does at the end of Stage 2.
-            L("Asher", "...Ready.", null, shot: "S_Asher_Tight"),
+            L("Asher", "...Ready.", null, shot: "S_Asher_Step"),
 
             L("Sydney", "Come on, boys! Load up before the daylight scorches our skulls!",
               "09_Sydney_LoadUp", shot: "S_Sydney", cue: "sydney-pats-baena"),
@@ -284,6 +299,36 @@ public static class BuildStage3Cutscene
     }
 
     // ------------------------------------------------------------------ shots
+    /// A shot that keeps its subject framed wherever they actually stand.
+    ///
+    /// Baking the rotation assumes everybody hits their mark to the centimetre,
+    /// and nobody does: a walk ends where the clip ends, a shove lands where the
+    /// bodies allow. Measured across the scene, the subject was regularly
+    /// eighteen to twenty-nine degrees out of a frame whose half-angle is
+    /// thirteen - close enough to have been aimed at, far enough to be off the
+    /// side of the screen.
+    ///
+    /// Handing the camera the subject's head instead moves the problem from
+    /// something that must be predicted to something that is simply followed.
+    static CinemachineCamera Tracking(Transform parent, string name, Vector3 at, Transform subject, float fov)
+    {
+        var cam = Shot(parent, name, at, subject.position, fov);
+
+        cam.LookAt = subject;
+        var aim = cam.GetComponent<CinemachineRotationComposer>();
+        if (aim == null) aim = cam.gameObject.AddComponent<CinemachineRotationComposer>();
+
+        // Dead zone wide enough that breathing does not drift the frame, and no
+        // damping: this is a cut-to-cut scene, and a camera easing onto its
+        // subject after every cut reads as a mistake rather than as camerawork.
+        aim.Composition.DeadZone.Enabled = true;
+        aim.Composition.DeadZone.Size = new Vector2(0.18f, 0.18f);
+        aim.Damping = Vector2.zero;
+
+        EditorUtility.SetDirty(aim);
+        return cam;
+    }
+
     static CinemachineCamera Shot(Transform parent, string name, Vector3 at, Vector3 lookAt, float fov)
     {
         var t = parent.Find(name);
@@ -306,6 +351,13 @@ public static class BuildStage3Cutscene
         var lens = cam.Lens;
         lens.FieldOfView = fov;
         cam.Lens = lens;
+
+        // A plain shot points where it was told and nowhere else. Clearing these
+        // matters on a rebuild: a shot that used to track somebody would keep
+        // following them from a position chosen for a different frame.
+        cam.LookAt = null;
+        var stale = go.GetComponent<CinemachineRotationComposer>();
+        if (stale != null) Object.DestroyImmediate(stale);
 
         EditorUtility.SetDirty(cam);
         return cam;

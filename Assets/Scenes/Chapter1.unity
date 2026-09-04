@@ -332,6 +332,7 @@ GameObject:
   m_Component:
   - component: {fileID: 77198517}
   - component: {fileID: 77198518}
+  - component: {fileID: 77198519}
   m_Layer: 0
   m_Name: S_Baena
   m_TagString: Untagged
@@ -347,7 +348,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 77198516}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.05317351, y: 0.6422647, z: 0.04474033, w: 0.7633262}
+  m_LocalRotation: {x: -0.013362935, y: -0.64489126, z: -0.011278538, w: 0.76407427}
   m_LocalPosition: {x: -28.559828, y: 5.17, z: -12.833894}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -375,8 +376,8 @@ MonoBehaviour:
   m_LegacyPriority: 0
   Target:
     TrackingTarget: {fileID: 0}
-    LookAtTarget: {fileID: 0}
-    CustomLookAtTarget: 0
+    LookAtTarget: {fileID: 808656061}
+    CustomLookAtTarget: 1
   Lens:
     FieldOfView: 32
     OrthographicSize: 10
@@ -397,6 +398,35 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &77198519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 77198516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f38bda98361e1de48a4ca2bd86ea3c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
+  Composition:
+    ScreenPosition: {x: 0, y: 0}
+    DeadZone:
+      Enabled: 1
+      Size: {x: 0.18, y: 0.18}
+    HardLimits:
+      Enabled: 0
+      Size: {x: 0.8, y: 0.8}
+      Offset: {x: 0, y: 0}
+  CenterOnActivate: 1
+  TargetOffset: {x: 0, y: 0, z: 0}
+  Damping: {x: 0, y: 0}
+  Lookahead:
+    Enabled: 0
+    Time: 0
+    Smoothing: 0
+    IgnoreY: 0
 --- !u!1001 &98804712
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1531,6 +1561,7 @@ GameObject:
   m_Component:
   - component: {fileID: 257122287}
   - component: {fileID: 257122288}
+  - component: {fileID: 257122289}
   m_Layer: 0
   m_Name: S_Ethan_Tight
   m_TagString: Untagged
@@ -1574,8 +1605,8 @@ MonoBehaviour:
   m_LegacyPriority: 0
   Target:
     TrackingTarget: {fileID: 0}
-    LookAtTarget: {fileID: 0}
-    CustomLookAtTarget: 0
+    LookAtTarget: {fileID: 862654375}
+    CustomLookAtTarget: 1
   Lens:
     FieldOfView: 26
     OrthographicSize: 10
@@ -1596,6 +1627,35 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &257122289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 257122286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f38bda98361e1de48a4ca2bd86ea3c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
+  Composition:
+    ScreenPosition: {x: 0, y: 0}
+    DeadZone:
+      Enabled: 1
+      Size: {x: 0.18, y: 0.18}
+    HardLimits:
+      Enabled: 0
+      Size: {x: 0.8, y: 0.8}
+      Offset: {x: 0, y: 0}
+  CenterOnActivate: 1
+  TargetOffset: {x: 0, y: 0, z: 0}
+  Damping: {x: 0, y: 0}
+  Lookahead:
+    Enabled: 0
+    Time: 0
+    Smoothing: 0
+    IgnoreY: 0
 --- !u!1 &263480127
 GameObject:
   m_ObjectHideFlags: 0
@@ -2134,6 +2194,7 @@ GameObject:
   m_Component:
   - component: {fileID: 328270424}
   - component: {fileID: 328270423}
+  - component: {fileID: 328270425}
   m_Layer: 0
   m_Name: S_Alex
   m_TagString: Untagged
@@ -2162,8 +2223,8 @@ MonoBehaviour:
   m_LegacyPriority: 0
   Target:
     TrackingTarget: {fileID: 0}
-    LookAtTarget: {fileID: 0}
-    CustomLookAtTarget: 0
+    LookAtTarget: {fileID: 330563795}
+    CustomLookAtTarget: 1
   Lens:
     FieldOfView: 38
     OrthographicSize: 10
@@ -2199,6 +2260,40 @@ Transform:
   m_Children: []
   m_Father: {fileID: 656635098}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &328270425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328270422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f38bda98361e1de48a4ca2bd86ea3c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
+  Composition:
+    ScreenPosition: {x: 0, y: 0}
+    DeadZone:
+      Enabled: 1
+      Size: {x: 0.18, y: 0.18}
+    HardLimits:
+      Enabled: 0
+      Size: {x: 0.8, y: 0.8}
+      Offset: {x: 0, y: 0}
+  CenterOnActivate: 1
+  TargetOffset: {x: 0, y: 0, z: 0}
+  Damping: {x: 0, y: 0}
+  Lookahead:
+    Enabled: 0
+    Time: 0
+    Smoothing: 0
+    IgnoreY: 0
+--- !u!4 &330563795 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -7919782325774250174, guid: 506f498d1161671488c101c7a58ab950, type: 3}
+  m_PrefabInstance: {fileID: 991672286}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &342838218
 GameObject:
   m_ObjectHideFlags: 0
@@ -6155,6 +6250,7 @@ Transform:
   - {fileID: 857350886}
   - {fileID: 1938443853}
   - {fileID: 328270424}
+  - {fileID: 1315285862}
   m_Father: {fileID: 1338720518}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &673186806
@@ -6294,6 +6390,7 @@ GameObject:
   m_Component:
   - component: {fileID: 675534544}
   - component: {fileID: 675534545}
+  - component: {fileID: 675534546}
   m_Layer: 0
   m_Name: S_Ethan_OTS
   m_TagString: Untagged
@@ -6337,8 +6434,8 @@ MonoBehaviour:
   m_LegacyPriority: 0
   Target:
     TrackingTarget: {fileID: 0}
-    LookAtTarget: {fileID: 0}
-    CustomLookAtTarget: 0
+    LookAtTarget: {fileID: 862654375}
+    CustomLookAtTarget: 1
   Lens:
     FieldOfView: 34
     OrthographicSize: 10
@@ -6359,6 +6456,35 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &675534546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 675534543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f38bda98361e1de48a4ca2bd86ea3c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
+  Composition:
+    ScreenPosition: {x: 0, y: 0}
+    DeadZone:
+      Enabled: 1
+      Size: {x: 0.18, y: 0.18}
+    HardLimits:
+      Enabled: 0
+      Size: {x: 0.8, y: 0.8}
+      Offset: {x: 0, y: 0}
+  CenterOnActivate: 1
+  TargetOffset: {x: 0, y: 0, z: 0}
+  Damping: {x: 0, y: 0}
+  Lookahead:
+    Enabled: 0
+    Time: 0
+    Smoothing: 0
+    IgnoreY: 0
 --- !u!1 &699021735
 GameObject:
   m_ObjectHideFlags: 0
@@ -6916,6 +7042,12 @@ MonoBehaviour:
   lowerArmL: {fileID: 0}
   upperArmR: {fileID: 0}
   lowerArmR: {fileID: 0}
+  neck: {fileID: 0}
+  clavicleL: {fileID: 0}
+  clavicleR: {fileID: 0}
+  handL: {fileID: 0}
+  handR: {fileID: 0}
+  hip: {fileID: 0}
   breathDegrees: 1.5
   breathsPerMinute: 13
   swayDegrees: 1.3
@@ -6931,6 +7063,16 @@ MonoBehaviour:
   handWorkSeconds: 1.6
   gestureDegrees: 9
   gestureSeconds: 2.2
+  shoulderBreathDegrees: 1.8
+  neckShare: 0.4
+  wristDegrees: 7
+  shoulderRollEvery: {x: 11, y: 24}
+  shoulderRollDegrees: 6
+  shoulderRollSeconds: 1.5
+  weightShiftEvery: {x: 7, y: 16}
+  weightShiftDegrees: 2.4
+  weightShiftSeconds: 1.1
+  tempo: 0
 --- !u!95 &808656065
 Animator:
   serializedVersion: 7
@@ -7260,7 +7402,7 @@ MonoBehaviour:
   Target:
     TrackingTarget: {fileID: 0}
     LookAtTarget: {fileID: 0}
-    CustomLookAtTarget: 0
+    CustomLookAtTarget: 1
   Lens:
     FieldOfView: 42
     OrthographicSize: 10
@@ -7306,8 +7448,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 857350885}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.017720893, y: 0.88143295, z: -0.033176452, w: -0.4708092}
-  m_LocalPosition: {x: -25.969639, y: 5.57, z: -11.624047}
+  m_LocalRotation: {x: -0.013883264, y: 0.8796733, z: -0.025728406, w: -0.47467902}
+  m_LocalPosition: {x: -25.442911, y: 5.57, z: -11.29992}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7335,9 +7477,9 @@ MonoBehaviour:
   Target:
     TrackingTarget: {fileID: 0}
     LookAtTarget: {fileID: 0}
-    CustomLookAtTarget: 0
+    CustomLookAtTarget: 1
   Lens:
-    FieldOfView: 36
+    FieldOfView: 44
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -7356,6 +7498,11 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!4 &862654375 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -7919782325774250174, guid: faf69f29392b0314eb0a9a483e01dc5a, type: 3}
+  m_PrefabInstance: {fileID: 1208430095}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &883726368
 GameObject:
   m_ObjectHideFlags: 0
@@ -8049,6 +8196,12 @@ MonoBehaviour:
   lowerArmL: {fileID: 0}
   upperArmR: {fileID: 0}
   lowerArmR: {fileID: 0}
+  neck: {fileID: 0}
+  clavicleL: {fileID: 0}
+  clavicleR: {fileID: 0}
+  handL: {fileID: 0}
+  handR: {fileID: 0}
+  hip: {fileID: 0}
   breathDegrees: 1.5
   breathsPerMinute: 13
   swayDegrees: 1.3
@@ -8064,6 +8217,16 @@ MonoBehaviour:
   handWorkSeconds: 1.6
   gestureDegrees: 9
   gestureSeconds: 2.2
+  shoulderBreathDegrees: 1.8
+  neckShare: 0.4
+  wristDegrees: 7
+  shoulderRollEvery: {x: 11, y: 24}
+  shoulderRollDegrees: 6
+  shoulderRollSeconds: 1.5
+  weightShiftEvery: {x: 7, y: 16}
+  weightShiftDegrees: 2.4
+  weightShiftSeconds: 1.1
+  tempo: 0
 --- !u!95 &991672290
 Animator:
   serializedVersion: 7
@@ -9149,6 +9312,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1151608549}
   - component: {fileID: 1151608550}
+  - component: {fileID: 1151608551}
   m_Layer: 0
   m_Name: S_Ethan
   m_TagString: Untagged
@@ -9192,8 +9356,8 @@ MonoBehaviour:
   m_LegacyPriority: 0
   Target:
     TrackingTarget: {fileID: 0}
-    LookAtTarget: {fileID: 0}
-    CustomLookAtTarget: 0
+    LookAtTarget: {fileID: 862654375}
+    CustomLookAtTarget: 1
   Lens:
     FieldOfView: 30
     OrthographicSize: 10
@@ -9214,6 +9378,35 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &1151608551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1151608548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f38bda98361e1de48a4ca2bd86ea3c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
+  Composition:
+    ScreenPosition: {x: 0, y: 0}
+    DeadZone:
+      Enabled: 1
+      Size: {x: 0.18, y: 0.18}
+    HardLimits:
+      Enabled: 0
+      Size: {x: 0.8, y: 0.8}
+      Offset: {x: 0, y: 0}
+  CenterOnActivate: 1
+  TargetOffset: {x: 0, y: 0, z: 0}
+  Damping: {x: 0, y: 0}
+  Lookahead:
+    Enabled: 0
+    Time: 0
+    Smoothing: 0
+    IgnoreY: 0
 --- !u!1001 &1186267077
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9410,6 +9603,12 @@ MonoBehaviour:
   lowerArmL: {fileID: 0}
   upperArmR: {fileID: 0}
   lowerArmR: {fileID: 0}
+  neck: {fileID: 0}
+  clavicleL: {fileID: 0}
+  clavicleR: {fileID: 0}
+  handL: {fileID: 0}
+  handR: {fileID: 0}
+  hip: {fileID: 0}
   breathDegrees: 1.5
   breathsPerMinute: 13
   swayDegrees: 1.3
@@ -9425,6 +9624,16 @@ MonoBehaviour:
   handWorkSeconds: 1.6
   gestureDegrees: 9
   gestureSeconds: 2.2
+  shoulderBreathDegrees: 1.8
+  neckShare: 0.4
+  wristDegrees: 7
+  shoulderRollEvery: {x: 11, y: 24}
+  shoulderRollDegrees: 6
+  shoulderRollSeconds: 1.5
+  weightShiftEvery: {x: 7, y: 16}
+  weightShiftDegrees: 2.4
+  weightShiftSeconds: 1.1
+  tempo: 0
 --- !u!95 &1186267082
 Animator:
   serializedVersion: 7
@@ -9501,7 +9710,7 @@ MonoBehaviour:
   Target:
     TrackingTarget: {fileID: 0}
     LookAtTarget: {fileID: 0}
-    CustomLookAtTarget: 0
+    CustomLookAtTarget: 1
   Lens:
     FieldOfView: 40
     OrthographicSize: 10
@@ -9799,13 +10008,13 @@ MonoBehaviour:
     text: Say that to my face again, you bastard!
     voice: {fileID: 8300000, guid: 514496d209c68d04b9fde9d7fccf3be0, type: 3}
     continuesVoice: 0
-    shot: S_Asher
+    shot: S_Asher_Step
     cue: asher-steps-up
   - speaker: Ethan
     text: That's enough! Both of you! Baena, shut your mouth.
     voice: {fileID: 8300000, guid: 33e6e11aad3b9ee4d87edf1ee13785a0, type: 3}
     continuesVoice: 0
-    shot: S_Three
+    shot: S_Ethan_Block
     cue: ethan-blocks
   - speaker: Ethan
     text: We need every body we can get, and Asher volunteered.
@@ -9836,7 +10045,7 @@ MonoBehaviour:
     text: ...Ready.
     voice: {fileID: 0}
     continuesVoice: 0
-    shot: S_Asher_Tight
+    shot: S_Asher_Step
     cue: 
   - speaker: Sydney
     text: Come on, boys! Load up before the daylight scorches our skulls!
@@ -9886,6 +10095,12 @@ MonoBehaviour:
   lowerArmL: {fileID: 0}
   upperArmR: {fileID: 0}
   lowerArmR: {fileID: 0}
+  neck: {fileID: 0}
+  clavicleL: {fileID: 0}
+  clavicleR: {fileID: 0}
+  handL: {fileID: 0}
+  handR: {fileID: 0}
+  hip: {fileID: 0}
   breathDegrees: 1.5
   breathsPerMinute: 13
   swayDegrees: 1.3
@@ -9901,6 +10116,16 @@ MonoBehaviour:
   handWorkSeconds: 1.6
   gestureDegrees: 9
   gestureSeconds: 2.2
+  shoulderBreathDegrees: 1.8
+  neckShare: 0.4
+  wristDegrees: 7
+  shoulderRollEvery: {x: 11, y: 24}
+  shoulderRollDegrees: 6
+  shoulderRollSeconds: 1.5
+  weightShiftEvery: {x: 7, y: 16}
+  weightShiftDegrees: 2.4
+  weightShiftSeconds: 1.1
+  tempo: 0
 --- !u!95 &1208430100
 Animator:
   serializedVersion: 7
@@ -10004,6 +10229,111 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1921703692}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1315285861
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1315285862}
+  - component: {fileID: 1315285864}
+  - component: {fileID: 1315285865}
+  m_Layer: 0
+  m_Name: S_Asher_Step
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1315285862
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315285861}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.03460603, y: -0.13339427, z: 0.0046607666, w: 0.9904477}
+  m_LocalPosition: {x: -26.811722, y: 5.42, z: -12.5305195}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 656635098}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1315285864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315285861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
+  Priority:
+    Enabled: 1
+    m_Value: 0
+  OutputChannel: 1
+  StandbyUpdate: 2
+  m_StreamingVersion: 20241001
+  m_LegacyPriority: 0
+  Target:
+    TrackingTarget: {fileID: 0}
+    LookAtTarget: {fileID: 1628414238}
+    CustomLookAtTarget: 1
+  Lens:
+    FieldOfView: 28
+    OrthographicSize: 10
+    NearClipPlane: 0.1
+    FarClipPlane: 5000
+    Dutch: 0
+    ModeOverride: 0
+    PhysicalProperties:
+      GateFit: 2
+      SensorSize: {x: 21.946, y: 16.002}
+      LensShift: {x: 0, y: 0}
+      FocusDistance: 10
+      Iso: 200
+      ShutterSpeed: 0.005
+      Aperture: 16
+      BladeCount: 5
+      Curvature: {x: 2, y: 11}
+      BarrelClipping: 0.25
+      Anamorphism: 0
+  BlendHint: 0
+--- !u!114 &1315285865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315285861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f38bda98361e1de48a4ca2bd86ea3c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
+  Composition:
+    ScreenPosition: {x: 0, y: 0}
+    DeadZone:
+      Enabled: 1
+      Size: {x: 0.18, y: 0.18}
+    HardLimits:
+      Enabled: 0
+      Size: {x: 0.8, y: 0.8}
+      Offset: {x: 0, y: 0}
+  CenterOnActivate: 1
+  TargetOffset: {x: 0, y: 0, z: 0}
+  Damping: {x: 0, y: 0}
+  Lookahead:
+    Enabled: 0
+    Time: 0
+    Smoothing: 0
+    IgnoreY: 0
 --- !u!1001 &1328038560
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10410,6 +10740,7 @@ MonoBehaviour:
   - {fileID: 257122288}
   - {fileID: 1586006383}
   - {fileID: 1620153166}
+  - {fileID: 1315285864}
   - {fileID: 77198518}
   - {fileID: 1727463303}
   - {fileID: 1194270980}
@@ -10956,6 +11287,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1547111265}
   - component: {fileID: 1547111266}
+  - component: {fileID: 1547111267}
   m_Layer: 0
   m_Name: S_Ethan_Block
   m_TagString: Untagged
@@ -10971,7 +11303,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1547111264}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0015550226, y: 0.87034893, z: -0.0027484617, w: -0.49242538}
+  m_LocalRotation: {x: 0.0027652157, y: -0.58662003, z: 0.002002989, w: 0.8098551}
   m_LocalPosition: {x: -25.839558, y: 5.42, z: -11.915144}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -10999,8 +11331,8 @@ MonoBehaviour:
   m_LegacyPriority: 0
   Target:
     TrackingTarget: {fileID: 0}
-    LookAtTarget: {fileID: 0}
-    CustomLookAtTarget: 0
+    LookAtTarget: {fileID: 862654375}
+    CustomLookAtTarget: 1
   Lens:
     FieldOfView: 32
     OrthographicSize: 10
@@ -11021,6 +11353,35 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &1547111267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547111264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f38bda98361e1de48a4ca2bd86ea3c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
+  Composition:
+    ScreenPosition: {x: 0, y: 0}
+    DeadZone:
+      Enabled: 1
+      Size: {x: 0.18, y: 0.18}
+    HardLimits:
+      Enabled: 0
+      Size: {x: 0.8, y: 0.8}
+      Offset: {x: 0, y: 0}
+  CenterOnActivate: 1
+  TargetOffset: {x: 0, y: 0, z: 0}
+  Damping: {x: 0, y: 0}
+  Lookahead:
+    Enabled: 0
+    Time: 0
+    Smoothing: 0
+    IgnoreY: 0
 --- !u!1 &1569705223
 GameObject:
   m_ObjectHideFlags: 0
@@ -11196,6 +11557,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1586006382}
   - component: {fileID: 1586006383}
+  - component: {fileID: 1586006384}
   m_Layer: 0
   m_Name: S_Asher
   m_TagString: Untagged
@@ -11211,7 +11573,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1586006381}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.00003277642, y: 0.99995846, z: -0.003999797, w: -0.008194179}
+  m_LocalRotation: {x: 0.035932012, y: -0.11376848, z: 0.004117374, w: 0.9928488}
   m_LocalPosition: {x: -28.966555, y: 5.42, z: -11.408946}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11239,8 +11601,8 @@ MonoBehaviour:
   m_LegacyPriority: 0
   Target:
     TrackingTarget: {fileID: 0}
-    LookAtTarget: {fileID: 0}
-    CustomLookAtTarget: 0
+    LookAtTarget: {fileID: 1628414238}
+    CustomLookAtTarget: 1
   Lens:
     FieldOfView: 30
     OrthographicSize: 10
@@ -11261,6 +11623,35 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &1586006384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586006381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f38bda98361e1de48a4ca2bd86ea3c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
+  Composition:
+    ScreenPosition: {x: 0, y: 0}
+    DeadZone:
+      Enabled: 1
+      Size: {x: 0.18, y: 0.18}
+    HardLimits:
+      Enabled: 0
+      Size: {x: 0.8, y: 0.8}
+      Offset: {x: 0, y: 0}
+  CenterOnActivate: 1
+  TargetOffset: {x: 0, y: 0, z: 0}
+  Damping: {x: 0, y: 0}
+  Lookahead:
+    Enabled: 0
+    Time: 0
+    Smoothing: 0
+    IgnoreY: 0
 --- !u!1 &1620153164
 GameObject:
   m_ObjectHideFlags: 0
@@ -11271,6 +11662,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1620153165}
   - component: {fileID: 1620153166}
+  - component: {fileID: 1620153167}
   m_Layer: 0
   m_Name: S_Asher_Tight
   m_TagString: Untagged
@@ -11286,7 +11678,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1620153164}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.00004469323, y: 0.9999516, z: -0.005454156, w: -0.008193949}
+  m_LocalRotation: {x: 0.035630405, y: -0.112711, z: 0.0040443274, w: 0.99298054}
   m_LocalPosition: {x: -28.97311, y: 5.42, z: -11.808892}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11314,8 +11706,8 @@ MonoBehaviour:
   m_LegacyPriority: 0
   Target:
     TrackingTarget: {fileID: 0}
-    LookAtTarget: {fileID: 0}
-    CustomLookAtTarget: 0
+    LookAtTarget: {fileID: 1628414238}
+    CustomLookAtTarget: 1
   Lens:
     FieldOfView: 26
     OrthographicSize: 10
@@ -11336,6 +11728,40 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &1620153167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1620153164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f38bda98361e1de48a4ca2bd86ea3c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
+  Composition:
+    ScreenPosition: {x: 0, y: 0}
+    DeadZone:
+      Enabled: 1
+      Size: {x: 0.18, y: 0.18}
+    HardLimits:
+      Enabled: 0
+      Size: {x: 0.8, y: 0.8}
+      Offset: {x: 0, y: 0}
+  CenterOnActivate: 1
+  TargetOffset: {x: 0, y: 0, z: 0}
+  Damping: {x: 0, y: 0}
+  Lookahead:
+    Enabled: 0
+    Time: 0
+    Smoothing: 0
+    IgnoreY: 0
+--- !u!4 &1628414238 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8894059081686662317, guid: 8f2026897fd2d0b4d89e0e7d988d5e9a, type: 3}
+  m_PrefabInstance: {fileID: 654763909}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1646106656
 GameObject:
   m_ObjectHideFlags: 0
@@ -11593,6 +12019,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1727463302}
   - component: {fileID: 1727463303}
+  - component: {fileID: 1727463304}
   m_Layer: 0
   m_Name: S_Baena_Tight
   m_TagString: Untagged
@@ -11608,7 +12035,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1727463301}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.05939561, y: 0.6418788, z: 0.04997565, w: 0.7628672}
+  m_LocalRotation: {x: -0.010709455, y: -0.6513758, z: -0.009195438, w: 0.7586241}
   m_LocalPosition: {x: -28.06719, y: 5.2200003, z: -12.748399}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11636,8 +12063,8 @@ MonoBehaviour:
   m_LegacyPriority: 0
   Target:
     TrackingTarget: {fileID: 0}
-    LookAtTarget: {fileID: 0}
-    CustomLookAtTarget: 0
+    LookAtTarget: {fileID: 808656061}
+    CustomLookAtTarget: 1
   Lens:
     FieldOfView: 26
     OrthographicSize: 10
@@ -11658,6 +12085,35 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &1727463304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727463301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f38bda98361e1de48a4ca2bd86ea3c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
+  Composition:
+    ScreenPosition: {x: 0, y: 0}
+    DeadZone:
+      Enabled: 1
+      Size: {x: 0.18, y: 0.18}
+    HardLimits:
+      Enabled: 0
+      Size: {x: 0.8, y: 0.8}
+      Offset: {x: 0, y: 0}
+  CenterOnActivate: 1
+  TargetOffset: {x: 0, y: 0, z: 0}
+  Damping: {x: 0, y: 0}
+  Lookahead:
+    Enabled: 0
+    Time: 0
+    Smoothing: 0
+    IgnoreY: 0
 --- !u!1 &1728405858
 GameObject:
   m_ObjectHideFlags: 0
@@ -12344,6 +12800,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1938443853}
   - component: {fileID: 1938443854}
+  - component: {fileID: 1938443855}
   m_Layer: 0
   m_Name: S_Sydney
   m_TagString: Untagged
@@ -12387,8 +12844,8 @@ MonoBehaviour:
   m_LegacyPriority: 0
   Target:
     TrackingTarget: {fileID: 0}
-    LookAtTarget: {fileID: 0}
-    CustomLookAtTarget: 0
+    LookAtTarget: {fileID: 1186267079}
+    CustomLookAtTarget: 1
   Lens:
     FieldOfView: 34
     OrthographicSize: 10
@@ -12409,6 +12866,35 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &1938443855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1938443852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f38bda98361e1de48a4ca2bd86ea3c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
+  Composition:
+    ScreenPosition: {x: 0, y: 0}
+    DeadZone:
+      Enabled: 1
+      Size: {x: 0.18, y: 0.18}
+    HardLimits:
+      Enabled: 0
+      Size: {x: 0.8, y: 0.8}
+      Offset: {x: 0, y: 0}
+  CenterOnActivate: 1
+  TargetOffset: {x: 0, y: 0, z: 0}
+  Damping: {x: 0, y: 0}
+  Lookahead:
+    Enabled: 0
+    Time: 0
+    Smoothing: 0
+    IgnoreY: 0
 --- !u!1 &1956034276
 GameObject:
   m_ObjectHideFlags: 0
