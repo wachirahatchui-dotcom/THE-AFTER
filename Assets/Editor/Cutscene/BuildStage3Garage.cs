@@ -116,9 +116,24 @@ public static class BuildStage3Garage
     const float Opening = 4.0f;
     const float Closing = 3.0f;
 
+    // When Asher's feet stop, measured on the same ruler as everything else.
+    //
+    // After the first line starts, not before it. Ethan greets a man who is
+    // still crossing the last of the floor, which is what people do - waiting
+    // for somebody to arrive and come to a halt before saying hello to them is
+    // a thing only cutscenes do. It also covers the cut: he is walking in the
+    // wide, still walking when it cuts to Ethan, and stopped by the time the
+    // camera comes round to him.
+    const float AsherStops = 5.4f;
+
+    // Far enough back that the walk is a walk. Three metres over five seconds is
+    // a man dawdling; this is about a metre a second, which is somebody with
+    // somewhere to be.
+    const float AsherWalks = 5.2f;
+
     // ------------------------------------------------------------------- shots
 
-    enum Move { Cut, DollyIn, Pan, PushIn, PullBack }
+    enum Move { Cut, DollyIn, Pan, PushIn, PullBack, TurnTo }
 
     class Shot
     {
@@ -131,6 +146,18 @@ public static class BuildStage3Garage
         public float fov;
         public Move move;
         public string alsoOn;     // second person, for a two-shot
+
+        // TurnTo: the camera stays where it is and swings its aim onto somebody
+        // else. Placed at the previous shot's position so the join between the
+        // two reads as one camera turning rather than as a cut.
+        public string turnTo;
+        public string sameSpotAs;
+
+        // Side: framed square on to the line between two people, so both are in
+        // profile with the gap between them showing. The angle you use when the
+        // point of the shot is the distance between two men rather than either
+        // of their faces.
+        public bool side;
     }
 
     static List<Shot> Shots()
@@ -140,9 +167,22 @@ public static class BuildStage3Garage
             // Asher walks in, and the camera walks in with him.
             new Shot { name = "G01_Arrive",     line = -1, on = "Ethan",  back = 7.0f, swing = 28f, rise = 1.1f, fov = 44f, move = Move.DollyIn },
 
-            new Shot { name = "G02_Ethan",      line =  0, on = "Ethan",  back = 1.9f, swing = 26f, fov = 32f, move = Move.Cut },
-            new Shot { name = "G03_Asher",      line =  1, on = "Asher",  back = 1.9f, swing = -26f, fov = 32f, move = Move.Cut },
-            new Shot { name = "G04_Two",        line =  2, on = "Ethan",  back = 2.6f, swing = 62f, rise = 0.1f, fov = 40f, move = Move.Pan, alsoOn = "Asher" },
+            // Ethan speaks while Asher is still covering the last stride. Set
+            // wide of Ethan's centre line rather than square on him, so the
+            // space Asher is walking into is in the frame and he arrives in
+            // shot instead of appearing between two cuts.
+            new Shot { name = "G02_Ethan",      line =  0, on = "Ethan",  back = 2.3f, swing = 48f, fov = 36f, move = Move.Cut },
+
+            // The same camera, turning onto Asher now he has stopped. Standing
+            // in one place and looking at the other person is what a person in
+            // the room would do, and it holds the geography a cut would break.
+            new Shot { name = "G03_Asher",      line =  1, on = "Ethan",  back = 2.3f, swing = 48f, fov = 36f,
+                       move = Move.TurnTo, turnTo = "Asher", sameSpotAs = "G02_Ethan" },
+
+            // Both of them side on, with the gap between them showing.
+            new Shot { name = "G04_Two",        line =  2, on = "Ethan",  back = 2.9f, rise = 0.1f, fov = 40f,
+                       move = Move.Pan, alsoOn = "Asher", side = true },
+
             new Shot { name = "G05_Asher_Tight",line =  3, on = "Asher",  back = 1.15f, swing = -22f, fov = 26f, move = Move.Cut },
         };
     }
@@ -200,7 +240,7 @@ public static class BuildStage3Garage
 
         Vector3 ethanAt = Grounded(ethan.position);
         Vector3 asherAt = Grounded(ethanAt + intoRoom * 1.8f);
-        Vector3 asherFrom = Grounded(asherAt + intoRoom * 3.0f);
+        Vector3 asherFrom = Grounded(asherAt + intoRoom * AsherWalks);
 
         var mkAsher = Mark(marks, "Asher Talk Mark", asherAt, Look(asherAt, ethanAt));
         var mkFrom  = Mark(marks, "Asher Walk Start", asherFrom, Look(asherFrom, ethanAt));
@@ -356,20 +396,49 @@ public static class BuildStage3Garage
         Vector3 pos; Quaternion facing;
         Where(s.on, cast, standing, out pos, out facing);
 
-        Vector3 f = facing * Vector3.forward; f.y = 0f; f.Normalize();
-        Vector3 dir = Quaternion.AngleAxis(s.swing, Vector3.up) * f;
-
-        Vector3 at = new Vector3(pos.x, 0f, pos.z) + dir * s.back + Vector3.up * (pos.y + Eye + s.rise);
-
         lookAt = pos + Vector3.up * Eye;
 
         // A two-shot aims between the pair rather than at one of them, or the
         // second person sits on the edge of frame with their nose cropped.
-        if (!string.IsNullOrEmpty(s.alsoOn))
+        Vector3 p2 = pos;
+        bool pair = !string.IsNullOrEmpty(s.alsoOn);
+        if (pair)
         {
-            Vector3 p2; Quaternion q2;
+            Quaternion q2;
             Where(s.alsoOn, cast, standing, out p2, out q2);
             lookAt = Vector3.Lerp(lookAt, p2 + Vector3.up * Eye, 0.5f);
+        }
+
+        Vector3 at;
+
+        if (s.side && pair)
+        {
+            // Square on to the line between them. Both end up in profile with
+            // the gap in the middle of frame, which is the whole content of the
+            // shot: two men a certain distance apart, deciding about each other.
+            Vector3 between = p2 - pos; between.y = 0f;
+            Vector3 outward = Vector3.Cross(Vector3.up, between).normalized;
+
+            // Flattened first. The height is added once, from the floor - added
+            // on top of a midpoint that already carries a height puts the camera
+            // five metres up looking down at the tops of two heads.
+            Vector3 mid = Vector3.Lerp(pos, p2, 0.5f);
+            mid.y = 0f;
+
+            // Whichever side has room. A shot of a wall between two heads is not
+            // the shot, however correct the angle is.
+            Vector3 tryA = mid + outward * s.back;
+            Vector3 tryB = mid - outward * s.back;
+            Vector3 lift = Vector3.up * (pos.y + Eye + s.rise);
+
+            bool aClear = !Physics.CheckSphere(tryA + lift, 0.3f);
+            at = (aClear ? tryA : tryB) + lift;
+        }
+        else
+        {
+            Vector3 f = facing * Vector3.forward; f.y = 0f; f.Normalize();
+            Vector3 dir = Quaternion.AngleAxis(s.swing, Vector3.up) * f;
+            at = new Vector3(pos.x, 0f, pos.z) + dir * s.back + Vector3.up * (pos.y + Eye + s.rise);
         }
 
         rot = Quaternion.LookRotation((lookAt - at).normalized);
@@ -406,6 +475,17 @@ public static class BuildStage3Garage
                 // the pair, which is what sells two people sizing each other up.
                 at2 = RotateAbout(at, lookAt, 9f);
                 break;
+
+            case Move.TurnTo:
+                {
+                    // The body does not move at all. Only the aim swings, from
+                    // whoever was speaking onto whoever answers.
+                    Vector3 p; Quaternion q;
+                    Where(s.turnTo, cast, standing, out p, out q);
+                    at2 = at;
+                    rot2 = Quaternion.LookRotation(((p + Vector3.up * Eye) - at).normalized);
+                    return;
+                }
         }
 
         rot2 = Quaternion.LookRotation((lookAt - at2).normalized);
@@ -539,7 +619,12 @@ public static class BuildStage3Garage
                      : until;
             if (m.shot.line == -1) { from = 0f; to = Opening; }
 
-            var clip = MoveClip(m.shot.name, m.from, m.to, m.rFrom, m.rTo, to - from);
+            // A turn lands early and holds; a dolly takes the whole shot.
+            float over = m.shot.move == Move.TurnTo
+                ? Mathf.Min(0.55f, (to - from) * 0.45f)
+                : (to - from);
+
+            var clip = MoveClip(m.shot.name, m.from, m.to, m.rFrom, m.rTo, to - from, over);
 
             var anim = m.cam.GetComponent<Animator>();
             if (anim == null) anim = Undo.AddComponent<Animator>(m.cam.gameObject);
@@ -555,8 +640,21 @@ public static class BuildStage3Garage
         }
     }
 
-    /// A two-key clip that carries a camera from one framing to another.
-    static AnimationClip MoveClip(string name, Vector3 a, Vector3 b, Quaternion ra, Quaternion rb, float length)
+    /// A two-key clip that carries a camera from one framing to another, with
+    /// the whole move done in the first `over` seconds and held after.
+    ///
+    /// A turn onto the next speaker has to arrive before they finish talking.
+    /// "Glad to help." is a second and a quarter, and a camera still swinging
+    /// when the line ends is a camera that missed it.
+    static AnimationClip MoveClip(string name, Vector3 a, Vector3 b, Quaternion ra, Quaternion rb,
+                                  float length, float over = 0f)
+    {
+        if (over <= 0f || over > length) over = length;
+        return MoveClipInner(name, a, b, ra, rb, length, over);
+    }
+
+    static AnimationClip MoveClipInner(string name, Vector3 a, Vector3 b, Quaternion ra, Quaternion rb,
+                                       float length, float over)
     {
         string path = ClipDir + name + "_Move.anim";
         var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(path);
@@ -570,24 +668,36 @@ public static class BuildStage3Garage
 
         // Eased at both ends. A camera that starts and stops at full speed reads
         // as a machine; the whole point of a slow move is that it is not noticed.
-        Curve(clip, "m_LocalPosition.x", a.x, b.x, length);
-        Curve(clip, "m_LocalPosition.y", a.y, b.y, length);
-        Curve(clip, "m_LocalPosition.z", a.z, b.z, length);
-        Curve(clip, "m_LocalRotation.x", ra.x, rb.x, length);
-        Curve(clip, "m_LocalRotation.y", ra.y, rb.y, length);
-        Curve(clip, "m_LocalRotation.z", ra.z, rb.z, length);
-        Curve(clip, "m_LocalRotation.w", ra.w, rb.w, length);
+        Curve(clip, "m_LocalPosition.x", a.x, b.x, length, over);
+        Curve(clip, "m_LocalPosition.y", a.y, b.y, length, over);
+        Curve(clip, "m_LocalPosition.z", a.z, b.z, length, over);
+        Curve(clip, "m_LocalRotation.x", ra.x, rb.x, length, over);
+        Curve(clip, "m_LocalRotation.y", ra.y, rb.y, length, over);
+        Curve(clip, "m_LocalRotation.z", ra.z, rb.z, length, over);
+        Curve(clip, "m_LocalRotation.w", ra.w, rb.w, length, over);
 
         EditorUtility.SetDirty(clip);
         return clip;
     }
 
-    static void Curve(AnimationClip clip, string prop, float a, float b, float length)
+    static void Curve(AnimationClip clip, string prop, float a, float b, float length, float over)
     {
-        var k0 = new Keyframe(0f, a); var k1 = new Keyframe(length, b);
-        var curve = new AnimationCurve(k0, k1);
-        curve.SmoothTangents(0, 0f);
-        curve.SmoothTangents(1, 0f);
+        AnimationCurve curve;
+        if (over >= length - 0.001f)
+        {
+            curve = new AnimationCurve(new Keyframe(0f, a), new Keyframe(length, b));
+            curve.SmoothTangents(0, 0f);
+            curve.SmoothTangents(1, 0f);
+        }
+        else
+        {
+            // Move, then hold. The third key is what stops the value creeping on
+            // after the movement is supposed to have finished.
+            curve = new AnimationCurve(new Keyframe(0f, a), new Keyframe(over, b), new Keyframe(length, b));
+            curve.SmoothTangents(0, 0f);
+            curve.SmoothTangents(1, 0f);
+            curve.SmoothTangents(2, 0f);
+        }
         clip.SetCurve("", typeof(Transform), prop, curve);
     }
 
@@ -597,7 +707,7 @@ public static class BuildStage3Garage
     static void AddAsherWalk(TimelineAsset timeline, PlayableDirector director,
                              Transform asher, Transform from, Transform to, StringBuilder log)
     {
-        var clip = MoveClip("Asher_Arrive", from.position, to.position, from.rotation, to.rotation, Opening * 0.82f);
+        var clip = MoveClip("Asher_Arrive", from.position, to.position, from.rotation, to.rotation, AsherStops);
 
         var anim = asher.GetComponent<Animator>();
         if (anim == null) { log.AppendLine("  !! Asher ไม่มี Animator - ข้ามการเดิน"); return; }
@@ -605,13 +715,15 @@ public static class BuildStage3Garage
         var track = timeline.CreateTrack<AnimationTrack>(null, "Asher เดินเข้ามา");
         var ac = track.CreateClip(clip);
         ac.start = 0d;
-        ac.duration = Opening * 0.82f;
+        ac.duration = AsherStops;
         ac.displayName = "Asher เดินเข้ามา";
         track.trackOffset = TrackOffset.ApplySceneOffsets;
 
         director.SetGenericBinding(track, anim);
-        log.AppendFormat("Asher เดิน {0:F2} m ใน {1:F2} วิ\n",
-            Vector3.Distance(from.position, to.position), Opening * 0.82f);
+
+        float dist = Vector3.Distance(from.position, to.position);
+        log.AppendFormat("Asher เดิน {0:F2} m ใน {1:F2} วิ ({2:F2} m/s)  หยุดหลัง Ethan เริ่มพูด {3:F2} วิ\n",
+            dist, AsherStops, dist / AsherStops, AsherStops - Opening);
     }
 
     // ------------------------------------------------------------------ plumbing
