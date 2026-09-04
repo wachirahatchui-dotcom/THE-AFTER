@@ -51,6 +51,26 @@ public class Stage3Cutscene : MonoBehaviour
     [Tooltip("Where Ethan plants himself between them.")]
     public Transform ethanBlockMark;
 
+    [Header("Where the player is put")]
+    // Every shot in the scene is composed against a spot on the floor, and the
+    // player is the one person in it who arrives wherever they happened to stop
+    // walking. Framing a face from a position nobody knows is not something a
+    // camera can be asked to do: the shot that holds Asher at one and a half
+    // metres holds thin air if he pressed E from three, and his own reverse
+    // shot ends up pointed across the garage at a wall.
+    //
+    // So he is put on a mark, the way an actor is, and the move happens on
+    // black. The campfire already teaches this: walk close, the picture goes
+    // dark for a moment, and the scene opens with the camera somewhere chosen.
+    [Tooltip("Where Asher is stood for the whole conversation. Every shot is framed against this spot, so moving it means rebuilding the shots.")]
+    public Transform playerMark;
+
+    [Tooltip("Seconds of black over the move onto the mark. Long enough to hide the cut, short enough not to feel like a load.")]
+    public float anchorFade = 0.3f;
+
+    [Tooltip("Turned to face the player for the conversation and turned back at the end. Ethan works with his back to the room, and a scene shot over the back of his head is no scene at all.")]
+    public bool turnEthanToPlayer = true;
+
     [Header("Timing")]
     public float walkSeconds = 2.2f;
     public float stepSeconds = 0.7f;
@@ -78,6 +98,11 @@ public class Stage3Cutscene : MonoBehaviour
     bool running;
     Vector3 baenaHome;
     Quaternion baenaHomeRot;
+
+    // Where Ethan was standing and which way he was pointed before the scene
+    // turned him round, so he can go back to his bench afterwards.
+    Quaternion ethanHomeRot;
+    bool ethanTurned;
 
     void Awake()
     {
@@ -139,8 +164,60 @@ public class Stage3Cutscene : MonoBehaviour
             baenaHomeRot = baena.rotation;
         }
 
+        // Black first, then everybody into position, then up. Doing it in that
+        // order is the whole point: a player standing off the mark is teleported
+        // a metre sideways and Ethan spins on the spot, and neither is a thing
+        // to watch happen.
+        var fader = ScreenFader.I;
+        if (fader != null) fader.Transition(TakeMarks, anchorFade, 0.05f, anchorFade);
+        else TakeMarks();
+
         dm.onLine += OnLine;
         dm.onClosed += OnClosed;
+    }
+
+    /// Puts the player on their mark and turns Ethan round to meet them. Runs
+    /// on black, in the one moment when nothing is being looked at.
+    void TakeMarks()
+    {
+        if (player != null && playerMark != null)
+        {
+            // The controller writes its own position every frame and drags him
+            // back off the mark if it is left switched on across the move. It is
+            // already off through SetControl, but this does not depend on that.
+            bool had = playerBody != null && playerBody.enabled;
+            if (playerBody != null) playerBody.enabled = false;
+
+            player.SetPositionAndRotation(playerMark.position, playerMark.rotation);
+
+            // The first-person rig keeps its own yaw, so turning the body is not
+            // enough - without this he arrives on the mark still looking at
+            // wherever he was facing when he pressed E.
+            var look = Object.FindAnyObjectByType<FirstPersonCamera>();
+            if (look != null) look.SetYaw(playerMark.eulerAngles.y);
+
+            if (playerBody != null) playerBody.enabled = had;
+        }
+
+        if (turnEthanToPlayer && ethan != null && player != null)
+        {
+            var t = ethan.transform;
+            ethanHomeRot = t.rotation;
+
+            Vector3 d = player.position - t.position;
+            d.y = 0f;
+            if (d.sqrMagnitude > 0.0001f)
+            {
+                t.rotation = Quaternion.LookRotation(d.normalized);
+                ethanTurned = true;
+
+                // The idle holds a pose captured against the old rotation; re-read
+                // it here or he spends the scene leaning at the angle he was
+                // standing before he turned.
+                var idle = t.GetComponent<AmbientIdle>();
+                if (idle != null) idle.Capture();
+            }
+        }
     }
 
     void OnLine(int index)
@@ -405,6 +482,22 @@ public class Stage3Cutscene : MonoBehaviour
         // tightening a bolt in mid-air. They are about to load up and leave
         // anyway, so standing and breathing is both correct and what the script
         // has them doing.
+        // Back to the bench he was turned away from. Only if he never left it -
+        // the scene can end with him planted between Asher and Baena, and
+        // snapping him round on the spot there would read as a glitch rather
+        // than as a man going back to work.
+        if (ethanTurned && ethan != null)
+        {
+            if (ethanBlockMark == null ||
+                Vector3.Distance(ethan.transform.position, ethanBlockMark.position) > 0.5f)
+            {
+                ethan.transform.rotation = ethanHomeRot;
+                var idle = ethan.GetComponent<AmbientIdle>();
+                if (idle != null) idle.Capture();
+            }
+            ethanTurned = false;
+        }
+
         SettleAwayFromWork(ethan != null ? ethan.transform : null, ethanBlockMark);
         SettleAwayFromWork(baena, baenaMark);
 

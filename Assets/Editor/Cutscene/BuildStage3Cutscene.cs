@@ -97,14 +97,30 @@ public static class BuildStage3Cutscene
                       triCentre + Vector3.up * 0.75f, 40f));
 
         made.Add(Shot(cams, "S_Ethan_Block", Toward(ethanBlockAt, baenaAt, 1.9f), HeadAt(ethanBlockAt), 32f));
-        made.Add(Shot(cams, "S_Ethan_Two", Toward(ethanBlockAt, asherStepAt, 2.4f) + Right(ethan) * 0.5f,
+        // The two of them together, from Baena's side of the argument.
+        //
+        // It used to sit between Ethan and Asher, which is the one place in the
+        // room where both of them have their backs to you: by this point they
+        // are squared up at Baena, and a camera anywhere on the line between
+        // them is standing behind whichever one it is nearer. Past Baena's
+        // shoulder is where both faces are pointed, and it keeps the argument on
+        // the same side of the line as the rest of the scene.
+        Vector3 pairCentre = Vector3.Lerp(ethanBlockAt, asherStepAt, 0.5f);
+        made.Add(Shot(cams, "S_Ethan_Two", Behind(baenaAt, pairCentre, 1.15f, 0.6f),
                       Vector3.Lerp(HeadAt(ethanBlockAt), HeadAt(asherStepAt), 0.5f), 36f));
 
         // Sydney and Baena at her desk, and Alex across the room.
-        made.Add(Shot(cams, "S_Sydney", Toward(sydney.position, baena.position, 2.0f),
-                      Vector3.Lerp(Head(sydney), HeadAt(baenaAt), 0.4f), 34f));
-        made.Add(Shot(cams, "S_Alex", Toward(alex.position, alex.position - alex.forward, 4.5f) + Vector3.up * 0.6f,
-                      Head(alex), 38f));
+        //
+        // These two are framed off the character's own facing rather than off
+        // somebody else's position. Aiming Sydney's shot at where Baena keeps
+        // his desk put the camera at her shoulder, because that is simply the
+        // direction her desk happens to lie in; and Alex's was set back along
+        // the reverse of his forward, which is the definition of standing
+        // behind him. What a shot of somebody wants is the space they are
+        // facing into, swung off the centre line far enough to be a face rather
+        // than a passport photograph.
+        made.Add(Shot(cams, "S_Sydney", Framed(sydney, 2.0f), Head(sydney), 34f));
+        made.Add(Shot(cams, "S_Alex", Framed(alex, 3.0f), Head(alex), 38f));
 
         log.AppendFormat("สร้างกล้อง {0} ตัว\n", made.Count);
 
@@ -145,6 +161,10 @@ public static class BuildStage3Cutscene
         run.baenaMark = mkBaena;
         run.asherStepMark = mkStep;
         run.ethanBlockMark = mkBlock;
+
+        // The spot every shot in the scene was composed against, handed to the
+        // runner so it can stand the player on it before the first cut.
+        run.playerMark = mkAsher;
 
         // Asher's walk, played on whoever crosses the floor. Checked binding
         // by binding: all five rigs share the same bone paths.
@@ -299,6 +319,76 @@ public static class BuildStage3Cutscene
         return new Vector3(from.x, 0f, from.z) + dir.normalized * back + Vector3.up * (Eye + rise);
     }
 
+    // Out in front of somebody, swung off their centre line by `swing` degrees.
+    //
+    // Straight down the nose is the one angle that reads as a mugshot, so the
+    // default is a three-quarter view: enough of the far cheek to see a face,
+    // enough of the near one to see an expression on it.
+    static Vector3 InFrontOf(Transform who, float back, float swing)
+    {
+        Vector3 f = who.forward; f.y = 0f;
+        if (f.sqrMagnitude < 0.001f) f = Vector3.forward;
+        f.Normalize();
+
+        Vector3 dir = Quaternion.AngleAxis(swing, Vector3.up) * f;
+        return new Vector3(who.position.x, 0f, who.position.z) + dir * back + Vector3.up * Eye;
+    }
+
+    /// The best spot in front of somebody that can actually see their face.
+    ///
+    /// Half this garage is people working at benches pushed against walls, and
+    /// "in front of" a man facing a wall is inside the wall. Alex is the clear
+    /// case: he stands at the robot desk with a metre of room behind the desk
+    /// and the whole garage behind him, so the one angle that shows his face is
+    /// also the one angle with brickwork in it.
+    ///
+    /// Rather than hand-pick a number per character - which stops being true the
+    /// first time somebody nudges a desk - this tries the angles a camera
+    /// operator would try, throws away the ones with something in the way, and
+    /// keeps the one that gives up the least of the face. A wide swing showing
+    /// three-quarters of a head beats a perfect front view of a wall.
+    static Vector3 Framed(Transform who, float idealBack)
+    {
+        Vector3 head = Head(who);
+        float[] swings = { 25f, -25f, 40f, -40f, 55f, -55f, 70f, -70f, 85f, -85f, 10f, -10f };
+        float[] backs = { idealBack, idealBack * 0.8f, idealBack * 1.2f, idealBack * 0.62f };
+
+        Vector3 best = InFrontOf(who, idealBack, 25f);
+        float bestScore = float.MinValue;
+
+        foreach (float back in backs)
+            foreach (float swing in swings)
+            {
+                Vector3 at = InFrontOf(who, back, swing);
+
+                Vector3 toHead = head - at;
+                float dist = toHead.magnitude;
+                if (dist < 0.5f) continue;
+
+                // Anything between the lens and the face disqualifies the angle,
+                // and so does a lens that has ended up inside something solid.
+                if (Physics.Raycast(at, toHead.normalized, dist - 0.2f)) continue;
+                if (Physics.CheckSphere(at, 0.25f)) continue;
+
+                Vector3 f = who.forward; f.y = 0f; f.Normalize();
+                Vector3 toCam = -toHead; toCam.y = 0f; toCam.Normalize();
+
+                // How much of the face is showing, against how far the shot has
+                // drifted from the size it was asked for.
+                //
+                // The penalty has to be steep. Walking the camera in always wins
+                // a little more face - there is less room for a shoulder to get
+                // in the way - so a gentle penalty ends up choosing a nose
+                // filling the screen over the medium shot that was wanted. Half
+                // a point per metre keeps the requested size unless something is
+                // genuinely standing in front of it.
+                float score = Vector3.Dot(f, toCam) - 0.45f * Mathf.Abs(back - idealBack);
+                if (score > bestScore) { bestScore = score; best = at; }
+            }
+
+        return best;
+    }
+
     // Behind one person's shoulder, looking past them at another.
     static Vector3 Behind(Vector3 who, Vector3 at, float back, float side)
     {
@@ -333,8 +423,23 @@ public static class BuildStage3Cutscene
             Undo.RegisterCreatedObjectUndo(go, "Build Stage 3 Cutscene");
             t = go.transform;
         }
-        t.SetPositionAndRotation(pos, rot);
+        t.SetPositionAndRotation(Grounded(pos), rot);
         return t;
+    }
+
+    /// Drops a spot onto whatever floor is under it.
+    ///
+    /// The marks were being derived from Ethan's own position, and Ethan stands
+    /// three centimetres into the concrete, so every character sent to a mark
+    /// inherited his three centimetres. It is small enough to argue about and
+    /// big enough to see: a boot with no sole showing, on every one of them, in
+    /// shots framed at a metre and a half.
+    static Vector3 Grounded(Vector3 pos)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(pos + Vector3.up * 2.5f, Vector3.down, out hit, 6f))
+            return new Vector3(pos.x, hit.point.y, pos.z);
+        return pos;
     }
 
     static Transform Child(Transform parent, string name)
@@ -349,9 +454,17 @@ public static class BuildStage3Cutscene
 
     static Transform Root3(UnityEngine.SceneManagement.Scene s, string name)
     {
+        // Anywhere in the scene, not only at the top of it. The cast used to sit
+        // at the root of Sandbox; in Chapter 1 they hang under the stage set
+        // that switches them on and off, and a search that only reads roots
+        // quietly finds nobody and reports the cast as missing.
+        //
+        // Still requires a skinned mesh: several of these names also belong to a
+        // camera or a mark, and a shot framed on a marker is a shot of nothing.
         foreach (var r in s.GetRootGameObjects())
-            if (r.name == name && r.GetComponentInChildren<SkinnedMeshRenderer>(true) != null)
-                return r.transform;
+            foreach (var t in r.GetComponentsInChildren<Transform>(true))
+                if (t.name == name && t.GetComponentInChildren<SkinnedMeshRenderer>(true) != null)
+                    return t;
         return null;
     }
 
