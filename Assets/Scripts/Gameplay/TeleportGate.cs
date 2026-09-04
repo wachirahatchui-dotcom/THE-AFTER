@@ -48,6 +48,18 @@ public class TeleportGate : MonoBehaviour
     [Tooltip("How long this gate ignores the player after they arrive, so stepping out of one does not immediately fall back into it.")]
     public float reentryGuard = 1.2f;
 
+    [Header("The far side")]
+    // Switched on by the gate being left rather than the gate being arrived at,
+    // because the arriving gate cannot switch itself on: it lives inside the set,
+    // so while the set is off that gate is off with it. The departing gate is the
+    // only one of the pair still running at the moment the far side needs waking.
+    //
+    // This is what lets a stage stay switched off until somebody actually walks
+    // into it. Chapter 1 holds the whole story in one scene, and a stage nobody
+    // has reached yet should not cost anything to stand there.
+    [Tooltip("Switched on just before the player is moved: the far side's scenery and cast. Anything already live is left alone.")]
+    public GameObject[] activateOnUse;
+
     [Header("Quest")]
     [Tooltip("Objective put up when the player arrives through THIS gate. Left empty the tracker is untouched, which is what a gate the player is only passing back through wants.")]
     public string objectiveOnArrival;
@@ -124,6 +136,13 @@ public class TeleportGate : MonoBehaviour
             float t = 0f;
             while (t < fadeSeconds) { t += Time.deltaTime; yield return null; }
         }
+
+        // Under the black, not before it. Waking a stage costs a frame or two
+        // while its meshes and skins come up, and those are frames the player
+        // should be spending looking at nothing.
+        if (activateOnUse != null)
+            foreach (var go in activateOnUse)
+                if (go != null && !go.activeSelf) go.SetActive(true);
 
         // The controller writes its own position every frame and will drag him
         // straight back if it is left switched on across the move.
