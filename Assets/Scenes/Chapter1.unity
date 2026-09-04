@@ -411,7 +411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
   Composition:
-    ScreenPosition: {x: 0, y: 0}
+    ScreenPosition: {x: -0.0033491368, y: 0.06}
     DeadZone:
       Enabled: 1
       Size: {x: 0.18, y: 0.18}
@@ -1577,7 +1577,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 257122286}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.008854768, y: 0.00096795836, z: -0.000008571387, w: 0.99996036}
+  m_LocalRotation: {x: -0.0043757083, y: 0.00096798706, z: 0.000004235671, w: 0.99999}
   m_LocalPosition: {x: -28.978846, y: 5.42, z: -12.158846}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1640,7 +1640,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
   Composition:
-    ScreenPosition: {x: 0, y: 0}
+    ScreenPosition: {x: -0.002023303, y: 0.06}
     DeadZone:
       Enabled: 1
       Size: {x: 0.18, y: 0.18}
@@ -2273,7 +2273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
   Composition:
-    ScreenPosition: {x: 0, y: 0}
+    ScreenPosition: {x: 0.13308062, y: 0.06}
     DeadZone:
       Enabled: 1
       Size: {x: 0.18, y: 0.18}
@@ -4402,7 +4402,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7117469919604291106, guid: 68a465de7bd11344ebc7ba24b8d715fe, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.7874674
+      value: 0.8240376
       objectReference: {fileID: 0}
     - target: {fileID: 7117469919604291106, guid: 68a465de7bd11344ebc7ba24b8d715fe, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6406,7 +6406,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 675534543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.030747933, y: -0.057790603, z: 0.0017807639, w: 0.9978535}
+  m_LocalRotation: {x: 0.024757637, y: -0.057800245, z: 0.0014338365, w: 0.9980201}
   m_LocalPosition: {x: -28.653475, y: 5.57, z: -13.664379}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -6469,7 +6469,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
   Composition:
-    ScreenPosition: {x: 0, y: 0}
+    ScreenPosition: {x: -0.018438768, y: 0.06}
     DeadZone:
       Enabled: 1
       Size: {x: 0.18, y: 0.18}
@@ -7072,7 +7072,7 @@ MonoBehaviour:
   weightShiftEvery: {x: 7, y: 16}
   weightShiftDegrees: 2.4
   weightShiftSeconds: 1.1
-  tempo: 0
+  tempo: 1.04
 --- !u!95 &808656065
 Animator:
   serializedVersion: 7
@@ -7374,7 +7374,7 @@ Transform:
   m_GameObject: {fileID: 849011019}
   serializedVersion: 2
   m_LocalRotation: {x: 0.03837523, y: 0.008188209, z: -0.00031446654, w: 0.9992298}
-  m_LocalPosition: {x: -29.06652, y: 5.358, z: -17.508127}
+  m_LocalPosition: {x: -29.06652, y: 5.391685, z: -17.508127}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7448,7 +7448,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 857350885}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.013883264, y: 0.8796733, z: -0.025728406, w: -0.47467902}
+  m_LocalRotation: {x: -0.011001728, y: 0.87981325, z: -0.020388357, w: -0.4747546}
   m_LocalPosition: {x: -25.442911, y: 5.57, z: -11.29992}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -8186,7 +8186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c0758c0de2cdb046a0c3d61f094a898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AmbientIdle
-  mood: 1
+  mood: 5
   lookAt: {fileID: 0}
   frame: {fileID: 991672288}
   chest: {fileID: 0}
@@ -8226,7 +8226,7 @@ MonoBehaviour:
   weightShiftEvery: {x: 7, y: 16}
   weightShiftDegrees: 2.4
   weightShiftSeconds: 1.1
-  tempo: 0
+  tempo: 0.84
 --- !u!95 &991672290
 Animator:
   serializedVersion: 7
@@ -9328,7 +9328,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1151608548}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0069455206, y: 0.0025262625, z: -0.000017546687, w: 0.9999727}
+  m_LocalRotation: {x: -0.0034321095, y: 0.0025263084, z: 0.000008670646, w: 0.99999094}
   m_LocalPosition: {x: -28.984581, y: 5.42, z: -12.508799}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -9391,7 +9391,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
   Composition:
-    ScreenPosition: {x: 0, y: 0}
+    ScreenPosition: {x: -0.0015870071, y: 0.06}
     DeadZone:
       Enabled: 1
       Size: {x: 0.18, y: 0.18}
@@ -9593,7 +9593,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c0758c0de2cdb046a0c3d61f094a898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AmbientIdle
-  mood: 1
+  mood: 4
   lookAt: {fileID: 808656061}
   frame: {fileID: 1186267078}
   chest: {fileID: 0}
@@ -9633,7 +9633,7 @@ MonoBehaviour:
   weightShiftEvery: {x: 7, y: 16}
   weightShiftDegrees: 2.4
   weightShiftSeconds: 1.1
-  tempo: 0
+  tempo: 1.15
 --- !u!95 &1186267082
 Animator:
   serializedVersion: 7
@@ -9681,8 +9681,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1194270978}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0059518334, y: 0.0081940135, z: -0.00004877189, w: 0.99994874}
-  m_LocalPosition: {x: -27.534283, y: 4.758, z: -16.92649}
+  m_LocalRotation: {x: 0.0059518903, y: 0.0081940135, z: -0.000048772356, w: 0.99994874}
+  m_LocalPosition: {x: -27.534283, y: 4.791685, z: -16.92649}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9804,7 +9804,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: faf69f29392b0314eb0a9a483e01dc5a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.958
+      value: 3.9916852
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: faf69f29392b0314eb0a9a483e01dc5a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -10125,7 +10125,7 @@ MonoBehaviour:
   weightShiftEvery: {x: 7, y: 16}
   weightShiftDegrees: 2.4
   weightShiftSeconds: 1.1
-  tempo: 0
+  tempo: 0.92
 --- !u!95 &1208430100
 Animator:
   serializedVersion: 7
@@ -10318,7 +10318,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
   Composition:
-    ScreenPosition: {x: 0, y: 0}
+    ScreenPosition: {x: -0.13498902, y: 0.06}
     DeadZone:
       Enabled: 1
       Size: {x: 0.18, y: 0.18}
@@ -11303,7 +11303,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1547111264}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0027652157, y: -0.58662003, z: 0.002002989, w: 0.8098551}
+  m_LocalRotation: {x: -0.0013663669, y: -0.5866226, z: -0.0009897302, w: 0.8098587}
   m_LocalPosition: {x: -25.839558, y: 5.42, z: -11.915144}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11366,7 +11366,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
   Composition:
-    ScreenPosition: {x: 0, y: 0}
+    ScreenPosition: {x: -0.13372055, y: 0.06}
     DeadZone:
       Enabled: 1
       Size: {x: 0.18, y: 0.18}
@@ -11636,7 +11636,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
   Composition:
-    ScreenPosition: {x: 0, y: 0}
+    ScreenPosition: {x: -0.13635184, y: 0.06}
     DeadZone:
       Enabled: 1
       Size: {x: 0.18, y: 0.18}
@@ -11741,7 +11741,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
   Composition:
-    ScreenPosition: {x: 0, y: 0}
+    ScreenPosition: {x: -0.13641925, y: 0.06}
     DeadZone:
       Enabled: 1
       Size: {x: 0.18, y: 0.18}
@@ -12098,7 +12098,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
   Composition:
-    ScreenPosition: {x: 0, y: 0}
+    ScreenPosition: {x: -0.005719938, y: 0.06}
     DeadZone:
       Enabled: 1
       Size: {x: 0.18, y: 0.18}
@@ -12879,7 +12879,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
   Composition:
-    ScreenPosition: {x: 0, y: 0}
+    ScreenPosition: {x: -0.09845306, y: 0.06}
     DeadZone:
       Enabled: 1
       Size: {x: 0.18, y: 0.18}

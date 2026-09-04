@@ -25,12 +25,22 @@ using UnityEngine;
 // a Timeline drives the same bones, or the two fight over every frame.
 public class AmbientIdle : MonoBehaviour
 {
+    // Appended to, never reordered: these are stored as numbers in the scene, so
+    // inserting one in the middle silently changes what everybody is doing.
     public enum Mood
     {
         Breathing,   // alive, and not much else
         Working,     // hands busy at a bench, head down on the job
         Talking,     // turned to somebody, gesturing
         Listening,   // turned to somebody, nodding along
+
+        // Three people at three benches all set to Working is one animation
+        // played three times, and a room reads that instantly however much the
+        // underlying motion wanders. These are different jobs, not different
+        // settings for the same job.
+        Rummaging,   // digging through a crate: big, irregular, whole torso in it
+        Inspecting,  // something held up and turned over, slow and deliberate
+        Waiting,     // nothing to do, and it shows - weight, glances, stillness
     }
 
     [Header("What they are doing")]
@@ -229,9 +239,50 @@ public class AmbientIdle : MonoBehaviour
 
         if (mood == Mood.Working) Hands(t);
         else if (mood == Mood.Talking) Gesture(t);
+        else if (mood == Mood.Rummaging) Rummage(t);
+        else if (mood == Mood.Inspecting) Inspect(t);
         else RestoreArms();
 
         Wrists(t);
+    }
+
+    /// Digging through a crate. Bigger than work and less regular: both arms go
+    /// in together, there are pauses where nothing happens, and the torso ducks
+    /// in after the hands instead of staying upright over a bench.
+    void Rummage(float t)
+    {
+        // The pause is the point. Somebody searching stops, looks at what they
+        // found, and starts again - and a search with no stops in it is a mime.
+        float gate = Mathf.Clamp01(Wave(t, 5.2f, 0.6f) * 1.6f + 0.55f);
+
+        float a = Wave(t, handWorkSeconds * 0.55f, 0.2f);
+        float b = Wave(t, handWorkSeconds * 0.67f, 1.6f);
+
+        float reach = handWorkDegrees * 2.6f * gate;
+        float elbow = elbowWorkDegrees * 1.8f * gate;
+
+        Turn(upperArmL, upLRest, Right(upperArmL), a * reach);
+        Turn(lowerArmL, loLRest, Right(lowerArmL), (a * 0.5f + 0.6f) * elbow);
+        Turn(upperArmR, upRRest, Right(upperArmR), b * reach);
+        Turn(lowerArmR, loRRest, Right(lowerArmR), (b * 0.5f + 0.6f) * elbow);
+
+        // The chest follows the hands down into the crate.
+        if (chest != null)
+            chest.localRotation = Quaternion.AngleAxis((a * 0.5f + 0.5f) * 5f * gate, Right(chest)) * chestRest;
+    }
+
+    /// Something held up and turned over. Slow, small, and mostly one arm - the
+    /// opposite shape to rummaging, which is what keeps the two apart on screen.
+    void Inspect(float t)
+    {
+        float turn = Wave(t, handWorkSeconds * 2.4f, 0.8f);
+
+        // The holding arm barely moves; the working one turns the thing over.
+        Turn(upperArmL, upLRest, Right(upperArmL), turn * handWorkDegrees * 0.35f);
+        Turn(lowerArmL, loLRest, Right(lowerArmL), elbowWorkDegrees * 0.8f + turn * 2f);
+
+        Turn(upperArmR, upRRest, Right(upperArmR), turn * handWorkDegrees * 1.1f);
+        Turn(lowerArmR, loRRest, Right(lowerArmR), elbowWorkDegrees * 1.2f + turn * elbowWorkDegrees * 0.6f);
     }
 
     /// The scheduled, discrete movements - the ones with a start and a finish.
@@ -253,8 +304,14 @@ public class AmbientIdle : MonoBehaviour
         {
             shiftFrom = shiftTo;
             shiftTo = -shiftTo;          // onto the other foot
+
+            // Somebody with nothing to do shifts about twice as often, and
+            // that restlessness is most of what tells a waiting man apart from
+            // a working one at a distance.
+            float rush = mood == Mood.Waiting ? 0.5f : 1f;
+
             shiftSince = Time.time;
-            shiftAt = Time.time + Random.Range(weightShiftEvery.x, weightShiftEvery.y);
+            shiftAt = Time.time + Random.Range(weightShiftEvery.x, weightShiftEvery.y) * rush;
         }
     }
 
@@ -298,10 +355,19 @@ public class AmbientIdle : MonoBehaviour
     /// Wrists. Barely moving, and the difference between hands and gloves.
     void Wrists(float t)
     {
-        if (mood == Mood.Working)
+        if (mood == Mood.Working || mood == Mood.Rummaging)
         {
-            Turn(handL, handLRest, Right(handL), Wave(t, handWorkSeconds * 0.8f, 0.9f) * wristDegrees);
-            Turn(handR, handRRest, Right(handR), Wave(t, handWorkSeconds * 0.93f, 2.2f) * wristDegrees);
+            float k = mood == Mood.Rummaging ? 1.8f : 1f;
+            Turn(handL, handLRest, Right(handL), Wave(t, handWorkSeconds * 0.8f, 0.9f) * wristDegrees * k);
+            Turn(handR, handRRest, Right(handR), Wave(t, handWorkSeconds * 0.93f, 2.2f) * wristDegrees * k);
+        }
+        else if (mood == Mood.Inspecting)
+        {
+            // Turning a part over is nearly all wrist - the arms barely move,
+            // which is what makes it read as looking at something rather than
+            // doing something to it.
+            Turn(handL, handLRest, Up(handL), Wave(t, handWorkSeconds * 2.2f, 0.5f) * wristDegrees * 2.2f);
+            Turn(handR, handRRest, Up(handR), Wave(t, handWorkSeconds * 2.6f, 1.3f) * wristDegrees * 2.6f);
         }
         else if (mood == Mood.Talking)
         {
@@ -349,7 +415,10 @@ public class AmbientIdle : MonoBehaviour
                 // Back to centre about half the time, so the head is not forever
                 // swinging between two extremes.
                 glanceTo = Random.value < 0.45f ? 0f : Random.Range(-glanceDegrees, glanceDegrees);
-                glanceAt = Time.time + Random.Range(glanceEvery.x, glanceEvery.y);
+
+                // Waiting looks around; working keeps its eyes on the job.
+                float often = mood == Mood.Waiting ? 0.55f : mood == Mood.Working ? 1.4f : 1f;
+                glanceAt = Time.time + Random.Range(glanceEvery.x, glanceEvery.y) * often;
             }
 
             float k = Mathf.Clamp01((Time.time - glanceSince) / Mathf.Max(0.05f, glanceSeconds));
@@ -358,7 +427,16 @@ public class AmbientIdle : MonoBehaviour
         }
 
         float drift = Wave(t, driftSeconds, 0.31f) * driftDegrees;
-        float tilt = mood == Mood.Working ? workHeadTilt + drift : drift * 0.5f;
+
+        // How far the head is down over whatever the hands are doing. Deepest
+        // into a crate, shallowest for something held up to the light, and level
+        // for somebody with nothing in their hands at all.
+        float down = mood == Mood.Working    ? workHeadTilt
+                   : mood == Mood.Rummaging  ? workHeadTilt * 1.35f
+                   : mood == Mood.Inspecting ? workHeadTilt * 0.45f
+                   : 0f;
+
+        float tilt = down > 0f ? down + drift : drift * 0.5f;
 
         // A small roll of the head, off its own wave. Two axes moving is a head;
         // one axis moving is a turret.

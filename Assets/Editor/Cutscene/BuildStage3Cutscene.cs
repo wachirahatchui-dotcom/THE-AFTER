@@ -325,8 +325,52 @@ public static class BuildStage3Cutscene
         aim.Composition.DeadZone.Size = new Vector2(0.18f, 0.18f);
         aim.Damping = Vector2.zero;
 
+        // Looking room.
+        //
+        // Dead centre is where a camera puts somebody when nobody has thought
+        // about it, and it is the reason a run of shots can be individually
+        // correct and still feel wrong: every face pinned to the middle of the
+        // screen, talking into the edge of frame. A face wants space on the side
+        // it is turned towards and the frame edge close behind its head, which
+        // is also what makes a pair of reverses read as two people looking at
+        // each other rather than two portraits.
+        //
+        // Which way that is depends on where the camera ended up, so it is
+        // worked out per shot rather than set once.
+        // Off the head bone, not off transform.root - in Chapter 1 the cast hang
+        // under a stage set, so root is the set and its forward is whichever way
+        // world Z happens to point. Every shot came out with the same offset.
+        Transform person = Owner(subject);
+
+        Vector3 look = person.forward; look.y = 0f;
+        Vector3 toSubject = subject.position - at; toSubject.y = 0f;
+
+        if (look.sqrMagnitude > 0.001f && toSubject.sqrMagnitude > 0.001f)
+        {
+            look.Normalize();
+            toSubject.Normalize();
+
+            // Which side of the frame they are looking towards, in the camera's
+            // own terms. Facing screen-right wants the space on the right, so
+            // the head goes left.
+            Vector3 camRight = Vector3.Cross(Vector3.up, toSubject);
+            float lean = Vector3.Dot(look, camRight);
+
+            aim.Composition.ScreenPosition = new Vector2(Mathf.Clamp(lean, -1f, 1f) * -0.14f, 0.06f);
+        }
+        else aim.Composition.ScreenPosition = new Vector2(0f, 0.06f);
+
         EditorUtility.SetDirty(aim);
         return cam;
+    }
+
+    /// The character a bone belongs to. Stops at the stage set rather than
+    /// running all the way to the top of the scene.
+    static Transform Owner(Transform bone)
+    {
+        Transform t = bone;
+        while (t.parent != null && !t.parent.name.StartsWith("===")) t = t.parent;
+        return t;
     }
 
     static CinemachineCamera Shot(Transform parent, string name, Vector3 at, Vector3 lookAt, float fov)
