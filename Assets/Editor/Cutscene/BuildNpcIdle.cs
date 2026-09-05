@@ -159,9 +159,21 @@ public static class BuildNpcIdle
         var hip = TripoPose.Bone(bones, TripoPose.Hips);
         if (hip == null) { log.AppendFormat("  !! {0} ไม่มีกระดูกสะโพก\n", who); return; }
 
-        // His own frame, taken once: forward is where he faces, left is across it.
+        // His own frame, taken once. Forward is where he faces; left is asked of
+        // the skeleton rather than worked out from forward.
+        //
+        // Worked out, it came out backwards: cross(up, forward) is RIGHT in
+        // Unity's left-handed space, so a variable named left held right, the
+        // hand targets went to the opposite sides, and he stood at the bench with
+        // his arms crossed over each other. The feet survived it only because
+        // they were both measured and placed through the same wrong axis, so the
+        // sign cancelled and hid the mistake.
+        //
+        // HisLeft reads the difference between the two thigh bones. There is no
+        // way to get that backwards.
         Vector3 face = t.forward; face.y = 0f; face.Normalize();
-        Vector3 left = Vector3.Cross(Vector3.up, face).normalized;
+        PoseTools.ApplyRestPose(go, rest);
+        Vector3 left = TripoPose.HisLeft(bones);
         Vector3 floor = homePos;
 
         float standHip = hip.position.y - floor.y;
