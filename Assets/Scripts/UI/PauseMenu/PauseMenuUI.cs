@@ -221,15 +221,6 @@ public class PauseMenuUI : MonoBehaviour, IMenuHost
 
             if (LoadingScreen.IsLoading) return;
 
-            // Escape has one owner, and it is this method. If the inventory
-            // read Escape too, both would fire in the same frame and the bag
-            // would close straight into a paused game.
-            if (InventoryUI.IsOpen)
-            {
-                InventoryUI.Instance.Close(true);
-                return;
-            }
-
             if (!IsPaused)
             {
                 Pause();
@@ -281,11 +272,6 @@ public class PauseMenuUI : MonoBehaviour, IMenuHost
         // Mid-load there is nothing coherent to pause into, and the loading screen
         // finishes on its own in a moment.
         if (LoadingScreen.IsLoading) return;
-
-        // The bag is a game screen rather than a menu, so it comes down first
-        // instead of having the pause menu stacked on top of it.
-        if (InventoryUI.IsOpen && InventoryUI.Instance != null)
-            InventoryUI.Instance.Close(true);
 
         Pause();
     }

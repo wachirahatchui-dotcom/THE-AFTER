@@ -145,7 +145,7 @@ public class FirstPersonCamera : MonoBehaviour
     {
         if (headBone == null || cutsceneHeadLook <= 0f) return;
 
-        bool frozen = DialogueManager.IsActive || InventoryUI.IsOpen || PauseMenuUI.IsPaused;
+        bool frozen = DialogueManager.IsActive || PauseMenuUI.IsPaused;
         var mouse = Mouse.current;
 
         if (mouse != null && !frozen)
@@ -223,7 +223,7 @@ public class FirstPersonCamera : MonoBehaviour
         // The mouse stops turning him while a panel is open, but the camera keeps
         // sitting where it should - a view that drifts during a conversation is
         // worse than one that simply holds still.
-        bool frozen = DialogueManager.IsActive || InventoryUI.IsOpen || PauseMenuUI.IsPaused;
+        bool frozen = DialogueManager.IsActive || PauseMenuUI.IsPaused;
 
         var mouse = Mouse.current;
         if (mouse != null && !frozen)

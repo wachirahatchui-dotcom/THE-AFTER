@@ -92,7 +92,6 @@ public class MainMenuUI : MonoBehaviour, IMenuHost
     public SaveLoadPage SavePage { get; private set; }
     public OptionsPage OptionsPage { get; private set; }
     public CreditsPage CreditsPage { get; private set; }
-    public StageSelectPage StagePage { get; private set; }
     public ConfirmDialog Confirm { get; private set; }
 
     // ---------------------------------------------------------------- private
@@ -193,7 +192,6 @@ public class MainMenuUI : MonoBehaviour, IMenuHost
         SavePage = new SaveLoadPage(this);
         OptionsPage = new OptionsPage(this);
         CreditsPage = new CreditsPage(this);
-        StagePage = new StageSelectPage(this);
         Confirm = new ConfirmDialog(this);
 
         BuildVersionLabel();
@@ -201,7 +199,6 @@ public class MainMenuUI : MonoBehaviour, IMenuHost
         SavePage.Panel.HideInstant();
         OptionsPage.Panel.HideInstant();
         CreditsPage.Panel.HideInstant();
-        StagePage.Panel.HideInstant();
         Confirm.Panel.HideInstant();
     }
 
@@ -333,16 +330,6 @@ public class MainMenuUI : MonoBehaviour, IMenuHost
 
         ColumnButton(root, "PLAY", row++, OnPlay);
 
-        // Only when there is a catalog to show. An empty stage select is worse
-        // than no stage select: it looks like the feature is broken rather than
-        // like it has not been set up.
-        //
-        // Asked of the catalog rather than of StagePage, which does not exist
-        // yet - the pages are built after this column so that each of them
-        // darkens what is behind it without darkening itself.
-        var stages = StageCatalog.Load();
-        if (stages != null && stages.stages != null && stages.stages.Length > 0)
-            ColumnButton(root, "STAGE SELECT", row++, OnOpenStages);
 
         ColumnButton(root, "LOAD GAME", row++, OnOpenSave);
         ColumnButton(root, "OPTIONS", row++, OnOpenOptions);
@@ -495,7 +482,6 @@ public class MainMenuUI : MonoBehaviour, IMenuHost
         SavePage.Panel.SetTransition(PanelIn, PanelOut);
         OptionsPage.Panel.SetTransition(PanelIn, PanelOut);
         CreditsPage.Panel.SetTransition(PanelIn, PanelOut);
-        StagePage.Panel.SetTransition(PanelIn, PanelOut);
         Confirm.Panel.SetTransition(PanelIn, PanelOut);
     }
 
@@ -591,10 +577,6 @@ public class MainMenuUI : MonoBehaviour, IMenuHost
         CreditsPage.RestartScroll();
     }
 
-    void OnOpenStages()
-    {
-        OpenPanel(StagePage.Panel);
-    }
 
     void OnExit()
     {

@@ -12,14 +12,6 @@ public class PlayerInteractor : MonoBehaviour
         if (DialogueManager.IsActive)
             return;
 
-        // With the bag open, E belongs to nothing and the floating "Press E"
-        // prompt would sit on top of the panel.
-        if (InventoryUI.IsOpen)
-        {
-            if (DialogueManager.Instance != null) DialogueManager.Instance.ShowHint(null);
-            return;
-        }
-
         nearest = FindNearest();
         if (DialogueManager.Instance != null)
             DialogueManager.Instance.ShowHint(nearest);

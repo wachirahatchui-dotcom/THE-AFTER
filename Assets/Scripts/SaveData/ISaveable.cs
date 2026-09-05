@@ -13,9 +13,9 @@ public class SaveEntry
 // Implement this on any system whose state belongs in a save file, then
 // register it. The save system does not need to know what the system is:
 //
-//     public class Inventory : MonoBehaviour, ISaveable
+//     public class QuestLog : MonoBehaviour, ISaveable
 //     {
-//         public string SaveId { get { return "inventory"; } }
+//         public string SaveId { get { return "quests"; } }
 //         public string CaptureState()            { return JsonUtility.ToJson(data); }
 //         public void   RestoreState(string json) { JsonUtility.FromJsonOverwrite(json, data); }
 //
@@ -23,7 +23,7 @@ public class SaveEntry
 //         void OnDisable() { SaveRegistry.Unregister(this); }
 //     }
 //
-// This is the extension point: inventory, quests, world flags and door states
+// This is the extension point: quests, world flags and door states
 // all plug in without SaveSystem.cs ever changing.
 public interface ISaveable
 {

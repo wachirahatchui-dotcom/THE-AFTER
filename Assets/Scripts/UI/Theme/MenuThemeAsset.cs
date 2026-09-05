@@ -196,51 +196,6 @@ public class MenuThemeAsset : ScriptableObject
     public int dialoguePromptFontSize = 22;
     public float dialoguePromptBob = 5f;
 
-    // ============================================================== inventory
-    // Same slab and border as the dialogue box - the bag also opens over live
-    // gameplay, so it uses the same "ink over the world" language.
-    [Header("Inventory layout")]
-    public Vector2 inventoryPanelSize  = new Vector2(1280f, 700f);
-    public Vector2 inventoryDetailSize = new Vector2(520f, 470f);
-    public int inventoryColumns = 5;
-    public float inventoryCellSize = 110f;
-    public float inventoryCellSpacing = 14f;
-    public int inventoryTitleFontSize = 46;
-    public int inventoryNameFontSize = 34;
-    public int inventoryMetaFontSize = 20;
-    public int inventoryBodyFontSize = 22;
-    public int inventoryCountFontSize = 20;
-
-    [Header("Inventory colours")]
-    public Color inventorySlotFill           = new Color(0.130f, 0.150f, 0.190f, 0.85f);
-    public Color inventorySlotHover          = new Color(0.200f, 0.220f, 0.260f, 0.92f);
-    // Selection tints the slot rather than inverting it: item glyphs are pale,
-    // and a parchment fill behind a pale glyph erases the item.
-    public Color inventorySlotSelected       = new Color(0.300f, 0.180f, 0.110f, 0.95f);
-    public Color inventorySlotBorder         = new Color(0.756f, 0.667f, 0.475f, 0.50f);
-    public Color inventorySlotSelectedBorder = new Color(0.729f, 0.435f, 0.271f, 1f);
-    public Color inventoryDetailFill         = new Color(0.100f, 0.120f, 0.155f, 0.75f);
-    public Color inventoryCountText          = new Color(0.925f, 0.878f, 0.792f, 0.85f);
-    public Color inventoryCountTextSelected  = new Color(0.980f, 0.920f, 0.840f, 1f);
-
-    [Header("Inventory motion")]
-    public float inventoryPanelDuration = 0.34f;
-    [Tooltip("How long one slot takes to arrive during the opening cascade.")]
-    public float inventorySlotDuration = 0.28f;
-    [Tooltip("Delay added per step of the cascade. 0 makes every slot arrive at once.")]
-    public float inventorySlotStagger = 0.028f;
-    public float inventoryHoverDuration = 0.14f;
-    [Tooltip("Pixels a slot lifts under the pointer.")]
-    public float inventoryHoverLift = 6f;
-    [Tooltip("Length of the gain flash and the drop-away.")]
-    public float inventoryGainDuration = 0.26f;
-
-    [Tooltip("Cycled through on every open, so the bag never opens the same way twice in a row.")]
-    public string[] inventoryOpenAnims = { "BagOpen", "BagUnclasp", "BagSwing", "BagDrop" };
-    public string inventoryCloseAnim = "BagClose";
-    [Tooltip("Used when Escape closes the bag rather than N or the close button.")]
-    public string inventoryCancelAnim = "BagSnap";
-
     // ================================================================== audio
     [Header("Default volumes (first run only)")]
     [Range(0f, 1f)] public float defaultMaster = 1f;

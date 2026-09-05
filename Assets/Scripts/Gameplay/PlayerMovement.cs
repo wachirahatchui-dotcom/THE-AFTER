@@ -144,7 +144,7 @@ public class PlayerMovement : MonoBehaviour
         if (dt <= 0f) return;
 
         var kb = Keyboard.current;
-        bool frozen = DialogueManager.IsActive || InventoryUI.IsOpen || PauseMenuUI.IsPaused;
+        bool frozen = DialogueManager.IsActive || PauseMenuUI.IsPaused;
 
         Vector2 stick = Vector2.zero;
         bool sprinting = false;
