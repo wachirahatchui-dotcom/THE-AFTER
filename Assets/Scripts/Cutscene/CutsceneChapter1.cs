@@ -14,7 +14,7 @@ using UnityEngine;
 // takes over the camera, so two of them left to start themselves fight: the
 // shorter one finishes, fades to black, and paints over the one still playing.
 // That is exactly what a black screen halfway through Stage 3 turned out to be.
-public class CutsceneChapter1 : MonoBehaviour
+public class CutsceneChapter1 : MonoBehaviour, ISaveable
 {
     // The scenery and cast belonging to one stage of the chapter.
     //
@@ -72,6 +72,9 @@ public class CutsceneChapter1 : MonoBehaviour
     [Tooltip("Put up the moment Logan is done - the errand he sends Asher on.")]
     public string garageObjective = "Go through the black door to the garage";
 
+    [Tooltip("What the tracker says once he is already in the garage. Only used when a save resumes there - walking through the door normally, the gate puts its own objective up.")]
+    public string inGarageObjective = "Find Ethan and talk to him";
+
     [Header("Waiting for the player")]
     [Tooltip("Logan, so he can breathe and look about while the player walks over instead of sitting frozen on the last frame of the scene that just ended.")]
     public SeatedIdle waitingIdle;
@@ -92,6 +95,83 @@ public class CutsceneChapter1 : MonoBehaviour
     Coroutine promptRoutine;
     QuestUI quest;
 
+    // How far through the chapter the player has got: 0 the bedroom, 1 the camp,
+    // 2 the garage. Written as each stage begins and read back out of a save.
+    int reached;
+
+    // Whether a save put us here rather than New Game.
+    //
+    // Without this, loading a save into Chapter 1 replays the chapter from its
+    // first frame: Start() has no idea it is resuming, so it switches on the
+    // bedroom and plays the flashback, and the position the save restored is
+    // thrown away half a second later. Every save made anywhere in the chapter
+    // loads as a new game with a different play time on it.
+    bool resuming;
+
+    // ---------------------------------------------------------------- saving
+
+    [System.Serializable]
+    class State { public int reached; }
+
+    public string SaveId { get { return "chapter1"; } }
+
+    public string CaptureState()
+    {
+        return JsonUtility.ToJson(new State { reached = reached });
+    }
+
+    public void RestoreState(string json)
+    {
+        if (string.IsNullOrEmpty(json)) return;
+        var s = JsonUtility.FromJson<State>(json);
+        if (s == null) return;
+
+        reached = Mathf.Clamp(s.reached, 0, stageSets != null ? stageSets.Length - 1 : 0);
+
+        // Only a save from past the opening counts as resuming. One taken during
+        // the flashback has nothing to skip to and should play normally.
+        resuming = reached > 0;
+    }
+
+    void Awake()
+    {
+        // Registered in Awake because the save is applied from sceneLoaded, which
+        // Unity raises after every Awake and before any Start. Registering later
+        // would mean RestoreState never runs and every load starts the chapter.
+        SaveRegistry.Register(this);
+    }
+
+    /// Picks up where a save left off, instead of playing the chapter again.
+    void Resume()
+    {
+        ShowOnly(reached);
+
+        if (ScreenFader.I != null) ScreenFader.I.FadeIn(handoverFade);
+
+        SetPlayerControl(true);
+
+        // The player's position came from the save, so nothing here moves them.
+        // Everything else is the state the stage would have been handed over in.
+        if (reached >= 1)
+        {
+            if (waitingIdle != null) waitingIdle.enabled = true;
+
+            // Logan's conversation is behind us at this point, so the fire is
+            // not something to walk up to any more.
+            if (campfire != null) campfire.armed = false;
+
+            // The errand, or the next one along if the save is already past it.
+            // Resuming in the garage under "go to the garage" reads as the game
+            // having lost its place.
+            string task = reached >= 2 ? inGarageObjective : garageObjective;
+
+            if (quest == null) quest = QuestUI.I;
+            if (quest != null && !string.IsNullOrEmpty(task)) quest.Show(task);
+        }
+
+        Debug.Log("[Chapter1] โหลดเซฟ - ข้ามคัตซีน เริ่มที่ stage " + reached);
+    }
+
     void Start()
     {
         // Nothing else may start itself: this object decides the order.
@@ -102,6 +182,9 @@ public class CutsceneChapter1 : MonoBehaviour
         SetPlayerControl(false);
         if (campfire != null) campfire.armed = false;
 
+        // A save decides where the chapter starts, and it is not at the beginning.
+        if (resuming) { Resume(); return; }
+
         // Only the stage being played is switched on.
         //
         // The whole chapter lives in one scene, with the bedroom and the camp
@@ -111,6 +194,7 @@ public class CutsceneChapter1 : MonoBehaviour
         // shadows into shots it does not appear in, its skinned meshes are still
         // accounted for, and every one of its meshes still sits in memory. The
         // bedroom alone is two million triangles and the camp is another four.
+        reached = 0;
         ShowOnly(0);
 
         if (stage1 != null)
@@ -146,6 +230,7 @@ public class CutsceneChapter1 : MonoBehaviour
         // before the waking scene evaluates its first frame. Order matters:
         // Timeline cannot animate an object that is switched off, so the camp
         // has to be live before stageWake touches it.
+        reached = 1;
         ShowOnly(1);
 
         Debug.Log("[Chapter1] Stage 1 จบ (รวมภาพวาดในตัว) - ต่อ Stage 3a");
@@ -302,6 +387,8 @@ public class CutsceneChapter1 : MonoBehaviour
 
     void OnDestroy()
     {
+        SaveRegistry.Unregister(this);
+
         if (stage1 != null) stage1.onFinished -= OnStage1Finished;
         if (stageWake != null) stageWake.onFinished -= BeginWalk;
         if (stageTalk != null) stageTalk.onFinished -= OnTalkFinished;

@@ -99,6 +99,17 @@ public class TeleportGate : MonoBehaviour
         if (!visible)
             foreach (var r in GetComponentsInChildren<Renderer>(true))
                 r.enabled = false;
+
+        // Nobody is sent anywhere until they have been seen standing clear of the
+        // door at least once.
+        //
+        // A save restores the player wherever they were standing, and one taken
+        // near a doorway puts them inside its range on the first frame of the
+        // load - so the game opens by teleporting them somewhere they did not
+        // walk to, before they have touched the controls. Walking up to a gate
+        // normally clears this on the way in, because approaching from outside
+        // the range is what the check is looking for.
+        mustLeaveFirst = true;
     }
 
     void Update()
