@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b9900118d25d6749ad0a77148402b9d, type: 3}
+  m_Name: StageCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::StageCatalog
+  stages:
+  - label: CHAPTER 1  -  STAGE 1
+    hint: "\u0E2B\u0E49\u0E2D\u0E07\u0E19\u0E2D\u0E19  ~  \u0E04\u0E27\u0E32\u0E21\u0E17\u0E23\u0E07\u0E08\u0E33\u0E16\u0E36\u0E07\u0E41\u0E21\u0E48
+      (\u0E40\u0E25\u0E48\u0E19\u0E15\u0E31\u0E49\u0E07\u0E41\u0E15\u0E48\u0E15\u0E49\u0E19)"
+    sceneName: Chapter1
+    chapterName: Chapter 1
+    reached: 0
+    playerPosition: {x: 0, y: 0, z: 0}
+    playerYaw: 0
+  - label: CHAPTER 1  -  STAGE 2
+    hint: "\u0E1A\u0E31\u0E07\u0E40\u0E01\u0E2D\u0E23\u0E4C  ~  \u0E2B\u0E25\u0E31\u0E07\u0E04\u0E38\u0E22\u0E01\u0E31\u0E1A
+      Logan \u0E08\u0E1A"
+    sceneName: Chapter1
+    chapterName: Chapter 1
+    reached: 1
+    playerPosition: {x: -36.3, y: 1.1732094, z: 37.75}
+    playerYaw: 270
+  - label: CHAPTER 1  -  STAGE 3
+    hint: "\u0E42\u0E23\u0E07\u0E23\u0E16  ~  \u0E44\u0E1B\u0E2B\u0E32 Ethan"
+    sceneName: Chapter1
+    chapterName: Chapter 1
+    reached: 2
+    playerPosition: {x: -39.000004, y: 4.0416875, z: -25.85}
+    playerYaw: 90
